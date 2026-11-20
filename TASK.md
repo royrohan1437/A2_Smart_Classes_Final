@@ -222,10 +222,11 @@ and E2E configuration, test scripts, and baseline formatting scripts.
 - Acceptance: baseline lint/type-check, unit tests, formatting, and
 production build pass. STATUS: DONE.
 
-T03 --- Design system - Implement tokens, fonts, global styles,
-reusable buttons/inputs/cards/dialogs/badges/skeletons/loading elements,
-accessibility focus styles. - Acceptance: matches DESIGN.md,
-responsive and keyboard usable.
+T03 --- [x] Design system - Implemented navy/gold/ivory/charcoal
+palette and typography tokens, responsive base styles, visible focus,
+reduced-motion treatment, and reusable button/input/card/badge/dialog/
+skeleton primitives. - Acceptance: matches DESIGN.md and is responsive
+and keyboard usable. STATUS: DONE.
 
 T04 --- Shared application shells - Public/student/admin layouts;
 public header, navigation, login dropdown, footer; student/admin

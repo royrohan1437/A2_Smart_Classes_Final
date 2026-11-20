@@ -391,3 +391,120 @@ git diff --cached --check
 git commit -m "feat(T02): configure developer tooling"
 git push -u origin feat/T02-developer-tooling
 ```
+
+## T03 — Design system
+
+- Date: 2026-11-20
+- Status: DONE
+- Branch: feat/T03-design-system
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- Implement approved navy/gold/ivory/charcoal tokens: PASS.
+- Establish serif, calligraphic, and supporting typography: PASS.
+- Implement reusable buttons, inputs, cards, badges, dialogs, and skeletons: PASS.
+- Add visible keyboard focus and reduced-motion support: PASS.
+- Keep the implementation responsive and keyboard usable: PASS.
+- Avoid unapproved brand assets, dependencies, routes, or features: PASS.
+
+### 2. What was completed
+
+- Added CSS design tokens for the approved palette, surfaces, borders, shadows, status colors, and breakpoints.
+- Added Cormorant Garamond serif, Allura calligraphic, and Source Sans 3 supporting typography through Next.js font optimization.
+- Added global focus, selection, responsive, loading-line, skeleton, and reduced-motion styles.
+- Added reusable button, input, card, badge, accessible Radix dialog, and skeleton primitives.
+- Replaced the generated Next.js homepage with a temporary T03 design-system preview.
+
+### 3. How it was implemented
+
+The design foundation uses Tailwind CSS utilities backed by CSS custom properties and Next.js `next/font/google`. Components are separate, small, typed primitives under `src/components/ui/`. The dialog is built on Radix Dialog primitives for focus management and keyboard behavior. Motion respects `prefers-reduced-motion`, and skeleton/loading elements provide accessible status labels.
+
+### 4. Files changed
+
+- `src/app/globals.css` — palette, typography variables, focus, loading, skeleton, and reduced-motion styles.
+- `src/app/layout.tsx` — selected Next.js fonts and application metadata.
+- `src/app/page.tsx` — temporary T03 design-system visual preview.
+- `src/components/ui/button.tsx` — tactile button variants and loading/disabled states.
+- `src/components/ui/input.tsx` — labeled, hint/error-aware form input.
+- `src/components/ui/card.tsx` — restrained card and card-body primitives.
+- `src/components/ui/badge.tsx` — navy, gold, success, warning, danger, and neutral badges.
+- `src/components/ui/dialog.tsx` — accessible Radix confirmation dialog primitives.
+- `src/components/ui/skeleton.tsx` — image/block and text skeleton primitives.
+- `src/components/ui/index.ts` — UI primitive barrel exports.
+- `package.json` / `package-lock.json` — added Radix Dialog and removed unused Radix Slot.
+- `TASK.md` — marked T03 complete.
+- `PROGRESS.md` — appended this entry.
+
+### 5. Database and API impact
+
+No database or API changes.
+
+### 6. Dependencies and configuration
+
+Added:
+
+- `@radix-ui/react-dialog`
+
+Removed:
+
+- `@radix-ui/react-slot` because T03 did not use it.
+
+No environment variables or secrets were added.
+
+### 7. Verification
+
+- `npm run format` — PASS.
+- `npm run check` — PASS; ESLint and strict TypeScript pass.
+- `npm run test` — PASS: 1 test file, 2 tests.
+- `npm run format:check` — PASS.
+- `npm run build` — PASS; static `/` and `/_not-found` routes generated.
+- `npm audit --omit=dev` — PASS: 0 production vulnerabilities.
+- Browser page at `http://localhost:3000` — PASS; approved palette, primitives, form states, loading states, and dialog trigger rendered.
+- `npx playwright test tests/e2e/smoke.spec.ts --reporter=line` — PASS: 1 test passed.
+- Playwright Chromium was installed and cache reported the Chromium 1255 executable successfully.
+
+### 8. Issues, risks, and limitations
+
+- The homepage preview is temporary T03 verification and may be replaced or expanded in T05; T03 did not implement the approved homepage feature itself.
+- `@theme` is valid Tailwind CSS syntax but may appear as an unknown at-rule in basic CSS diagnostics outside Tailwind-aware tooling; build and lint pass.
+- Full development audit retains the previously documented Prisma transitive advisory; production audit is clean.
+
+### 9. Owner actions required
+
+- Review T03 visuals and approve the temporary design-system preview if it matches the intended aesthetic.
+- Commit T03 on `feat/T03-design-system`.
+- No credentials or external content are required for T04.
+
+### 10. Current project state
+
+The application now has the A2Smart Classes approved visual tokens and reusable accessible primitives. T04 can build the public, student, and admin shells on these foundations.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T04 — Shared application shells.
+- Why it is next: T04 introduces the layouts and navigation that all later public, student, and admin routes require.
+- Prerequisites: T03 completion, T04 scope approval.
+- First files/areas: `src/app/layout.tsx`, future `src/app/(public)`, `(student)`, `(admin)`, and `src/components/layout/` areas.
+- Exact first steps: implement public/student/admin layouts, public header/footer, student/admin drawers, Sonner provider, scroll-to-top, 404, and branded loading states.
+- Acceptance criteria: route shells and responsive navigation work; admin pages have no public footer.
+- Known pitfalls: do not implement T05 homepage content or unrelated page routes in T04.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes T00–T03 are complete. The current branch is `feat/T03-design-system`. The design foundation uses Deep Navy `#07142B`, Secondary Navy `#12264A`, Deep Gold `#8C6523`, Light Gold `#E5C16A`, Ivory `#F5F6F8`, charcoal text, Cormorant Garamond, Allura, and Source Sans 3. UI primitives exist in `src/components/ui/`. ESLint, strict TypeScript, 2 Vitest tests, formatting, build, and Playwright smoke test pass. The production npm audit reports 0 vulnerabilities. T04 is next and must not begin without a separate approval.
+
+### 13. Owner-run Git commands
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff
+git diff --stat
+git add package.json package-lock.json src/app/globals.css src/app/layout.tsx src/app/page.tsx src/components/ui TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T03): establish design system"
+git push -u origin feat/T03-design-system
+```
