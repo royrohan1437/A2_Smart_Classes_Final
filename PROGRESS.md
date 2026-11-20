@@ -262,3 +262,132 @@ git diff --cached --check
 git commit -m "feat(T01): bootstrap Next.js application"
 git push -u origin feat/T01-nextjs-bootstrap
 ```
+
+## T02 — Dependencies and developer tooling
+
+- Date: 2026-11-20
+- Status: DONE
+- Branch: feat/T02-developer-tooling
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- Add approved Prisma/Supabase and application dependencies: PASS.
+- Add Zod, React Hook Form, Zustand, and Sonner: PASS.
+- Add Vitest, Playwright, coverage support, and formatting tooling: PASS.
+- Configure aliases and test scripts: PASS.
+- Configure safe environment validation: PASS.
+- Baseline lint/type-check pass: PASS.
+- No unapproved dependencies or database setup: PASS.
+
+### 2. What was completed
+
+- Installed and locked the approved application dependencies.
+- Added stable Prisma 7.10.1 tooling only; no schema or database connection was created.
+- Added Vitest 5.1.1 with coverage, Playwright 1.65.1, and Prettier 3.
+- Added safe Zod server-environment validation for optional future integration variables.
+- Added Vitest unit-test configuration and one environment-validation test file.
+- Added Playwright browser test configuration and one homepage smoke test.
+- Added T02 npm scripts for tests, coverage, E2E, formatting, lint, type-check, and build checks.
+
+### 3. How it was implemented
+
+Npm dependency installation was performed directly in the workspace. Stable compatible versions were used where peer requirements conflicted with Node 24 typings. Vitest is configured to run `src/**/*.test.{ts,tsx}` in a Node environment. Playwright uses a local Next.js server and Chromium discovery. Environment validation intentionally treats integration variables as optional while the credentials are not yet configured.
+
+### 4. Files changed
+
+- `package.json` — dependencies and T02 scripts.
+- `package-lock.json` — updated dependency lock.
+- `.prettierrc.json` — formatting rules.
+- `vitest.config.ts` — unit-test configuration and alias.
+- `playwright.config.ts` — local E2E server and Chromium configuration.
+- `src/test/setup.ts` — reserved Vitest setup file.
+- `src/lib/env.ts` — Zod server environment validation.
+- `src/lib/env.test.ts` — unit tests for environment validation.
+- `tests/e2e/smoke.spec.ts` — minimal homepage Playwright smoke test.
+- `src/app/layout.tsx` — formatted by Prettier.
+- `TASK.md` — marked T02 complete.
+- `PROGRESS.md` — appended this entry.
+
+### 5. Database and API impact
+
+No database/API changes. Prisma is installed as tooling only; no `schema.prisma`, migration, database connection, or database query was added.
+
+### 6. Dependencies and configuration
+
+Runtime dependencies added:
+
+- `zod`
+- `react-hook-form`
+- `@hookform/resolvers`
+- `zustand`
+- `sonner`
+- `@supabase/supabase-js`
+
+Development dependencies added:
+
+- `prisma`
+- `vitest`
+- `@vitest/coverage-v8`
+- `@playwright/test`
+- `prettier`
+- Updated `@types/node` for Node 24 compatibility.
+
+No secrets or credential values were added.
+
+### 7. Verification
+
+- `npm run check` — PASS.
+- `npm run test` — PASS: 1 test file, 2 tests.
+- `npm run format:check` — PASS.
+- `npm run build` — PASS; static `/` and `/_not-found` routes generated.
+- `npx playwright test --list` — PASS; 1 smoke test discovered.
+- `npm audit --omit=dev` — PASS: 0 production vulnerabilities.
+- Full `npm audit` — development-only 3 high vulnerabilities remain in Prisma transitive tooling (`effect` via `@prisma/config`). The suggested force fix downgrades Prisma and was not applied.
+- Playwright browser execution — NOT RUN; no browser binary download was performed and T02 only requires discovery/setup.
+
+### 8. Issues, risks, and limitations
+
+- Playwright browser binaries are not downloaded or executed in T02.
+- No real Prisma schema or Supabase connection exists yet.
+- The full development dependency audit reports transitive Prisma tooling advisories; production dependencies are clean.
+- The environment validator accepts missing optional integrations until later tasks configure provider requirements.
+
+### 9. Owner actions required
+
+- Review and commit T02 on `feat/T02-developer-tooling`.
+- Browser installation remains an owner/CI setup decision later: `npx playwright install chromium`.
+- Real Supabase, R2, Brevo, and Sentry credentials must not be committed.
+
+### 10. Current project state
+
+The project now has baseline runtime, validation, state, toast, test, formatting, and ORM tooling. The environment remains without database, R2, Brevo, or authentication connections.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T03 — Design system.
+- Why it is next: T03 establishes approved tokens, fonts, components, and accessibility foundations before application shells.
+- Prerequisites: T02 completion and clean tooling checks.
+- First files/areas: `src/app/globals.css`, `src/app/layout.tsx`, `DESIGN.md`, `RULES.md`, and the future `src/components/ui/` area.
+- Exact first steps: establish palette/typography tokens, reusable component primitives, loading/skeleton/dialog/badge styles, and reduced-motion/focus behavior.
+- Acceptance criteria: responsive, keyboard usable, and consistent with `DESIGN.md`.
+- Known pitfalls: do not invent permanent brand assets or add pages/features not in T03 scope.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes T00–T02 are complete. The current branch is `feat/T02-developer-tooling`. Runtime dependencies include Zod, React Hook Form, Zustand, Sonner, and Supabase JS. Prisma 7.10.1 is installed only as tooling. Vitest 5.1.1 and Playwright 1.65.1 are configured, with 2 unit tests passing and 1 E2E smoke test discovered. `npm run check`, formatting, and build pass; production npm audit reports 0 vulnerabilities. No schema/API/database provider work was performed.
+
+### 13. Owner-run Git commands
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff
+git diff --stat
+git add package.json package-lock.json .prettierrc.json vitest.config.ts playwright.config.ts src/app/layout.tsx src/lib src/test tests TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T02): configure developer tooling"
+git push -u origin feat/T02-developer-tooling
+```

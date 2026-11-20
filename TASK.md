@@ -215,11 +215,12 @@ and root `vercel.json`. The owner GitHub remote remains configured and no
 secrets are committed. - Acceptance: local app runs, remote remains verified,
 and no secrets committed. STATUS: DONE.
 
-T02 --- Dependencies and developer tooling - Add approved
+T02 --- [x] Dependencies and developer tooling - Added approved
 Prisma/Supabase, Zod, React Hook Form, Zustand, Sonner, Vitest,
-Playwright dependencies as needed. - Configure aliases, lint/format, env
-validation, test scripts. - No unapproved dependency additions. -
-Acceptance: baseline lint/type-check pass.
+Playwright, and Prettier tooling. Added environment validation, unit-test
+and E2E configuration, test scripts, and baseline formatting scripts.
+- Acceptance: baseline lint/type-check, unit tests, formatting, and
+production build pass. STATUS: DONE.
 
 T03 --- Design system - Implement tokens, fonts, global styles,
 reusable buttons/inputs/cards/dialogs/badges/skeletons/loading elements,
