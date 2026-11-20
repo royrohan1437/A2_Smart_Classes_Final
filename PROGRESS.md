@@ -137,6 +137,120 @@ If the owner commits directly on `main`, replace the branch command and push com
 git push origin main
 ```
 
+## T09 — Academics/course directory
+
+- Date: 2026-11-21
+- Status: DONE
+- Branch: main
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- `/academics` lists all available boards with their classes nested below each board: PASS.
+- Selecting a class opens `/academics/[board]/[class]`: PASS.
+- Class pages display image-led subject cards and the specified subject details: PASS.
+- Directory and class pages have useful empty states for missing academic data: PASS (implemented; current demo catalogue is populated).
+- Course browsing is responsive and keyboard accessible: PASS (mobile browser check and semantic links/sections).
+- Preserve future dynamic integration with T29 and avoid presenting unverified academy data: PASS (isolated demo catalogue and prominent notices).
+
+### 2. What was completed
+
+- Replaced the `/academics` heading placeholder with a responsive board-wise directory and linked class tiles.
+- Added `/academics/[board]/[class]` with breadcrumbs and image-led subject cards showing description, course mode, duration, and fees.
+- Added explicit empty states for a catalogue with no boards and for a class with no subjects.
+- Added an isolated temporary example catalogue using only the board/class examples already listed in the PRD. All pages identify it as demo content; course duration and fees remain unconfirmed.
+- Added unit and Playwright coverage for catalogue lookup, board/class navigation, subject details, and mobile overflow.
+
+### 3. How it was implemented
+
+The App Router pages remain Server Components. `src/features/academics/catalog.ts` owns the temporary catalogue, typed records, and board/class lookup helpers so the T29 database-backed academic feature can replace the source without embedding data in page markup. The class route uses `generateStaticParams`, awaits Next.js 16 promise-based route params inside a Suspense boundary, and calls `notFound()` for unknown board/class slugs. The existing branded loading component provides the Suspense fallback. No changes were made to the shared header, footer, homepage, or existing route links.
+
+The subject photographs reuse the project’s existing temporary Unsplash image sources. They remain replaceable and are not verified academy photographs. The catalogue banner makes the example status clear and does not claim real fees, course durations, or confirmed offerings.
+
+### 4. Files changed
+
+- `src/app/(public)/academics/page.tsx` — board directory, class links, demo notice, and empty state.
+- `src/app/(public)/academics/[board]/[class]/page.tsx` — dynamic class route, subject cards/details, breadcrumb navigation, not-found handling, and Suspense loading state.
+- `src/features/academics/catalog.ts` — temporary typed demo catalogue and lookup functions for board/class paths.
+- `src/features/academics/catalog.test.ts` — unit coverage for documented example paths, subject detail fields, and unknown slugs.
+- `tests/e2e/academics.spec.ts` — desktop route flow and mobile overflow coverage.
+- `TASK.md` — marked T09 complete.
+- `PROGRESS.md` — appended this T09 handoff.
+
+Pre-existing changes to `AGENTS.md`, `.claude/`, `CLAUDE.md`, `architechture.md`, `design.md`, `prd.md`, and `rules.md` were preserved and are not part of T09.
+
+### 5. Database and API impact
+
+No database/API changes. Academic content is temporary in-memory demo data pending the database and admin academic work planned for T16/T17/T29. No migration, schema, API route, or environment configuration was added.
+
+### 6. Dependencies and configuration
+
+No dependencies added, removed, or updated. No environment variables added or changed.
+
+### 7. Verification
+
+- `npm test -- --pool=threads` — PASS: 2 test files, 4 tests.
+- `npx eslint src tests/e2e/academics.spec.ts` — PASS.
+- `npx tsc --noEmit` — PASS.
+- `npm run format:check` — PASS.
+- `npm run test:e2e -- tests/e2e/academics.spec.ts --reporter=line --workers=1` — PASS: 2 tests, including board → class navigation, subject details, and 390px mobile overflow.
+- Final rendered QA — PASS: page title and route identity verified, no browser console/page errors observed, all three subject images loaded, and desktop class/mobile directory screenshots saved to a temporary directory outside the repository.
+- `npm run build` — PASS: production compile, TypeScript, and static page generation. The first sandbox attempt hit `spawn EPERM`; the same command passed with process permission approved.
+- `npm run test:e2e -- --reporter=line --workers=1` — 9 PASS, 2 FAIL in unrelated existing tests: `tests/e2e/hero.spec.ts` expects 9 homepage images but finds 14, and `tests/e2e/shells.spec.ts` expects the obsolete homepage heading “Academic excellence begins with a shared foundation.” T09-specific E2E tests passed in the same run.
+- `npm run check` — FAILS at the existing lint step because ESLint scans `.gitnexus/run.cjs` and reports three `@typescript-eslint/no-require-imports` errors at lines 39–41. Focused lint on `src` and the T09 E2E test passes; TypeScript passes independently.
+- `git diff --check` — PASS.
+- GitNexus final incremental index refresh — PASS: 929 nodes, 1,019 edges, 10 clusters, 7 flows. `getAcademicClass` impact is LOW: one direct caller (`AcademicClassContent`) and one route-level caller at depth 2, with the `AcademicClassPage` flow affected. `detect_changes` reports low risk and no affected processes for the four tracked changed files; its file list does not include the new untracked route/catalogue files.
+- Browser warning: Next.js reports the existing global `scroll-behavior: smooth` setting should declare `data-scroll-behavior="smooth"` on `<html>`. The dynamic route params warning observed during an earlier run was fixed by adding the Suspense boundary; the final T09 E2E run no longer reports it.
+
+Standard sandbox attempts to start Next.js/Playwright and refresh the GitNexus index hit `spawn EPERM`; local E2E and build checks completed after process permission was approved. No production services or database were accessed.
+
+### 8. Issues, risks, and limitations
+
+- The public directory currently renders clearly labeled temporary examples. It is not connected to admin-managed academic records yet; T29/T37 must replace the catalogue source with the agreed database-backed flow.
+- Course mode is labeled as example content; duration and fees are shown as “To be confirmed.” Real offerings, prices, and descriptions require owner-approved data.
+- The remote Unsplash subject photos are temporary; verify licensing and replace with approved institute imagery before production.
+- The full existing E2E suite has two unrelated failures documented above. The existing aggregate `npm run check` is blocked by lint errors in `.gitnexus/run.cjs`.
+- The shared smooth-scroll warning remains in the pre-existing global HTML styling.
+
+### 9. Owner actions required
+
+- Provide verified boards, classes, subjects, descriptions, teaching modes, durations, fees, and approved/licensed photographs for the later T29 data integration.
+- Review and commit T09 using the owner-run commands below; do not stage the pre-existing `AGENTS.md`, `.claude/`, or untracked specification documents with this task.
+
+### 10. Current project state
+
+T00–T09 are recorded complete. `/academics` and the class-specific routes now support responsive board/class browsing using explicitly labeled temporary catalogue examples. The routes have empty states and are ready for T29 to connect to managed academic records. No database, authentication, storage, or email provider integration is present yet. Other planned public pages and portal features remain in their later task slots.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T10 — Faculty page.
+- Why it is next: it is the next public page in the ordered task list.
+- Prerequisites: T09 completion; no database prerequisite because teacher management is planned later in T28.
+- First files/areas: `src/app/(public)/faculty/page.tsx`, `design.md` faculty direction, public layout, and available replaceable image assets.
+- Exact first steps: inspect existing faculty page stub and shared image/design patterns; implement an image-led faculty page with portrait, name, qualifications, subjects, experience, and honest empty/demo states.
+- Acceptance criteria: responsive faculty presentation with the specified profile fields and no invented staff information.
+- Known pitfalls: T28 will own database/admin teacher management; keep temporary data isolated and clearly identified. Verify image licenses and do not invent qualifications or experience.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes is a Next.js 16.4.6, React 19.3.0, TypeScript, Tailwind CSS 4 App Router project on `main`. T00–T09 are complete. T09 added the public `/academics` board directory and `/academics/[board]/[class]` subject pages. The temporary typed catalogue is isolated in `src/features/academics/catalog.ts`, clearly marked as demo content, and must later be replaced by the database/admin academic flow in T29/T37. The route uses promise-based params, `generateStaticParams`, a Suspense branded loading state, and 404 handling for unknown slugs. Unit tests, focused ESLint, type-check, formatting, T09 Playwright tests, and production build pass. The full E2E suite has 9 passes and 2 existing failures (homepage image count and obsolete shell heading); `npm run check` fails on three existing lint errors in `.gitnexus/run.cjs`. GitNexus indexes this checkout with 929 nodes, 1,019 edges, 10 clusters, and 7 flows; impact for `getAcademicClass` is LOW with one direct caller and one route-level caller. No DB schema, migrations, APIs, auth, R2, or Brevo integration exists yet. `.env.example` contains names only: `DATABASE_URL`, `DIRECT_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PRIVATE_BUCKET_NAME`, `R2_PUBLIC_BUCKET_NAME`, `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`, `BREVO_ADMIN_EMAIL`, `SESSION_SECRET`, `ADMIN_BOOTSTRAP_TOKEN`, `NEXT_PUBLIC_APP_URL`, and `SENTRY_DSN`. Preserve pre-existing working-tree changes and do not commit or push automatically. Next task: T10 — Faculty page.
+
+### 13. Owner-run Git commands
+
+The current branch is `main`. These commands stage only T09 files; existing `AGENTS.md`, `.claude/`, `CLAUDE.md`, and untracked specifications remain untouched.
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff -- src/app/(public)/academics/page.tsx TASK.md PROGRESS.md
+git add -- "src/app/(public)/academics/page.tsx" "src/app/(public)/academics/[board]/[class]/page.tsx" "src/features/academics/catalog.ts" "src/features/academics/catalog.test.ts" "tests/e2e/academics.spec.ts" TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T09): add academic course directory"
+git push origin main
+```
+
 ## T01 — Next.js bootstrap
 
 - Date: 2026-11-20

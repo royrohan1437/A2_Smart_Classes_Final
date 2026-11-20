@@ -265,9 +265,11 @@ unverified institute facts or achievements are claimed. - Acceptance:
 quote banner, story, institute imagery, CTA, and mobile story-first layout
 verified. STATUS: DONE.
 
-T09 --- Academics/course directory: /academics and
-/academics/[board]/[class], board/class/subject hierarchy and subject
-details.
+T09 --- [x] Academics/course directory - Implemented the public board-wise
+course directory and `/academics/[board]/[class]` subject pages with
+clearly labeled, removable demo catalogue data and empty states. - Acceptance:
+directory/class routes, board/class/subject hierarchy, subject details,
+empty states, and responsive browsing verified. STATUS: DONE.
 
 T10 --- Faculty page: image-led circular portraits, name,
 qualifications, subjects, experience; data-driven states.
