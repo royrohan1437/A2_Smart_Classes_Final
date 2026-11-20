@@ -508,3 +508,135 @@ git diff --cached --check
 git commit -m "feat(T03): establish design system"
 git push -u origin feat/T03-design-system
 ```
+
+## T04 — Shared application shells
+
+- Date: 2026-11-20
+- Status: DONE
+- Branch: feat/T04-application-shells
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- Public layout with header, navigation, login dropdown, and footer: PASS.
+- Student layout and portal navigation: PASS.
+- Admin layout and utility navigation: PASS.
+- Admin pages do not include the public footer: PASS.
+- Global Sonner provider: PASS.
+- Custom 404 and branded loading states: PASS.
+- Scroll-to-top control: PASS.
+- Student/admin responsive drawer trigger: PASS for shell structure; full accessible drawer interaction remains a later shell enhancement if required.
+- No homepage feature implementation or backend authentication logic added: PASS.
+
+### 2. What was completed
+
+- Created public route-group layout with fixed/deep-navy public header and four-column public footer.
+- Added desktop login dropdown and mobile expandable login navigation.
+- Added active public navigation indicator and mobile Escape-key handling.
+- Created reusable student/admin portal shell with desktop sidebar and mobile menu trigger.
+- Created separate student and admin layouts so admin routes do not inherit the public footer.
+- Added Sonner provider, scroll-to-top, branded loading fallback, and custom 404 UI.
+- Added shell route placeholders for public, student, and admin navigation targets.
+- Moved student login, forgot-password, and change-password routes outside the authenticated student layout.
+
+### 3. How it was implemented
+
+Next.js App Router route groups separate public and student experiences while `/admin` uses a dedicated layout. The public layout owns only public header/footer chrome. The portal shell is a shared utility shell parameterized for student/admin navigation and is intentionally not authenticated yet. Sonner is mounted globally, but no success/error action is connected until later tasks.
+
+### 4. Files changed
+
+- `src/app/layout.tsx` — global provider and scroll-to-top integration.
+- `src/app/page.tsx` — deleted because it conflicted with the public route-group `/` page.
+- `src/app/(public)/layout.tsx` — public header/footer shell.
+- `src/app/(public)/page.tsx` — temporary T04 public root placeholder.
+- `src/app/(public)/**/page.tsx` — public navigation route placeholders.
+- `src/app/(public)/loading.tsx` — public branded loading state.
+- `src/app/(student)/layout.tsx` — authenticated student shell.
+- `src/app/(student)/profile/page.tsx` — profile shell placeholder.
+- `src/app/(student)/fees/page.tsx` — fees shell placeholder.
+- `src/app/student/{login,forgot-password,change-password}/page.tsx` — authentication route shell placeholders outside the portal layout.
+- `src/app/admin/layout.tsx` — Super Admin portal shell.
+- `src/app/admin/page.tsx` — admin root placeholder.
+- `src/app/admin/dashboard/page.tsx` — intentionally empty dashboard shell.
+- `src/app/admin/*/page.tsx` — route placeholders for later admin modules.
+- `src/app/loading.tsx` — global branded loading fallback.
+- `src/app/not-found.tsx` — custom 404 UI.
+- `src/components/layout/public-header.tsx` — responsive public navigation.
+- `src/components/layout/public-footer.tsx` — public dark footer.
+- `src/components/layout/portal-shell.tsx` — student/admin shared shell.
+- `src/components/layout/app-providers.tsx` — Sonner provider.
+- `src/components/layout/scroll-to-top.tsx` — global scroll control.
+- `src/components/layout/branded-loading.tsx` — branded loading treatment.
+- `tests/e2e/shells.spec.ts` — public/student/admin/404 smoke coverage.
+- `TASK.md` — marked T04 complete.
+- `PROGRESS.md` — appended this entry.
+
+### 5. Database and API impact
+
+No database or API changes.
+
+No authentication guards, session checks, or protected-route enforcement were implemented in T04; these belong to later authentication tasks.
+
+### 6. Dependencies and configuration
+
+No T04 dependency additions or removals.
+
+Sonner is installed but was only mounted globally; no application action uses it yet.
+
+### 7. Verification
+
+- `npm run format:check` — PASS.
+- `npm run check` — PASS: ESLint and strict TypeScript.
+- `npm run test` — PASS: 2 unit tests.
+- `npm run build` — PASS; public, student, admin, login, and 404 routes generated.
+- `npx playwright test tests/e2e/shells.spec.ts --reporter=line` — PASS: 4 shell tests.
+- Browser checks — PASS for `/`, `/profile`, `/admin/dashboard`, and unknown-route 404.
+- `npm audit --omit=dev` — PASS: 0 production vulnerabilities.
+- Generated test reports were removed after verification.
+
+### 8. Issues, risks, and limitations
+
+- Shell navigation placeholders are functional routes but do not contain later task feature logic.
+- Student and admin routes are not protected until T22/T23/T24 tasks.
+- The public footer contact section intentionally uses no invented contact details.
+- The student/admin mobile drawer is structurally present but does not yet use a fully interactive Radix or custom drawer component; T04 acceptance only requires the responsive shell trigger and later shell work may refine it.
+- The admin enquiry indicator is not displayed because actual enquiry data is unavailable.
+
+### 9. Owner actions required
+
+- Review public/student/admin shell layouts and navigation.
+- Commit T04 on `feat/T04-application-shells`.
+- No provider credentials or database setup are required for T05.
+
+### 10. Current project state
+
+T00–T04 are complete. The public header/footer shell, student portal sidebar shell, admin utility shell, global toast mount, scroll-to-top, loading fallback, and custom 404 are available. Public route placeholders resolve, as do student/admin shell routes. Authentication and feature data are still absent.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T05 — Homepage hero.
+- Why it is next: T05 implements the approved homepage hero after T04 established the public shell.
+- Prerequisites: T04 completion and owner approval of T05.
+- First files/areas: `src/app/(public)/page.tsx`, `src/components/layout/public-header.tsx`, `DESIGN.md` hero sections, and `public/assets/`.
+- Exact first steps: replace the public placeholder with the solid navy hero, editorial typography, CTAs, and approved image groups/parallax behavior.
+- Acceptance criteria: navy hero, at least nine images, alternating scroll-direction parallax, mobile three-row layout, reduced-motion support, and no invented permanent brand assets.
+- Known pitfalls: do not implement T06 story/course sections or T07 enquiry/footer changes in T05.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes T00–T04 are complete. The current branch is `feat/T04-application-shells`. Public routes use `(public)` layout shell, student routes use `(student)` layout shell, and `/admin/*` routes use the utility shell. The public header has desktop/mobile navigation and login dropdown, while the footer excludes invented contact details. The admin layout has no public footer. Custom 404/loading/scroll-to-top/Sonner provider are mounted globally. Production build generates `/`, `/about`, `/profile`, `/fees`, `/admin/dashboard`, login routes, and public placeholders. T05 begins only after separate approval.
+
+### 13. Owner-run Git commands
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff
+git diff --stat
+git add src/app src/components/layout tests/e2e/shells.spec.ts TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T04): build shared application shells"
+git push -u origin feat/T04-application-shells
+```

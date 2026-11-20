@@ -228,11 +228,11 @@ reduced-motion treatment, and reusable button/input/card/badge/dialog/
 skeleton primitives. - Acceptance: matches DESIGN.md and is responsive
 and keyboard usable. STATUS: DONE.
 
-T04 --- Shared application shells - Public/student/admin layouts;
-public header, navigation, login dropdown, footer; student/admin
-drawers; global Sonner; 404; scroll-to-top; skeletons and branded
-loading. - Admin has no public footer. - Acceptance: route shells and
-responsive navigation work.
+T04 --- [x] Shared application shells - Implemented public, student,
+and admin layouts; public header/login dropdown/footer; portal sidebars;
+Sonner provider; scroll-to-top; branded loading; custom 404; and shell
+route placeholders. Admin pages have no public footer. - Acceptance:
+route shells and responsive navigation work. STATUS: DONE.
 Phase 1 --- Public website
 T05 --- Homepage hero: approved navy hero, editorial typography,
 CTAs, three image groups with at least nine images, parallax and reverse

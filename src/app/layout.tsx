@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Allura, Source_Sans_3 } from "next/font/google";
+import type { ReactNode } from "react";
+import { Allura, Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { AppProviders } from "@/components/layout/app-providers";
+import { ScrollToTop } from "@/components/layout/scroll-to-top";
 
 const serifDisplay = Cormorant_Garamond({
   variable: "--font-serif-display",
@@ -25,13 +28,17 @@ export const metadata: Metadata = {
   description: "A2Smart Classes academic platform",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
       className={`${serifDisplay.variable} ${calligraphic.variable} ${sansSupport.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <AppProviders />
+        <ScrollToTop />
+      </body>
     </html>
   );
 }
