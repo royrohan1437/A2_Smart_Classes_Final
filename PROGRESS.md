@@ -868,3 +868,107 @@ git diff --cached --check
 git commit -m "feat(T07): add homepage enquiry and footer"
 git push origin main
 ```
+
+## T08 — About page
+
+- Date: 2026-11-21
+- Status: DONE
+- Branch: main
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- Full-width inspirational quote banner with institute imagery: PASS.
+- Navy readability overlay and responsive text positioning: PASS.
+- Our Story two-column desktop layout: PASS.
+- Story text first and stacked images on mobile: PASS.
+- Join Us card with approved CTA copy and Enroll Now link: PASS.
+- Enroll Now routes to `/enquiry`: PASS.
+- No invented institute facts, quotations, achievements, or accreditation: PASS.
+
+### 2. What was completed
+
+- Replaced the About placeholder with three approved sections.
+- Added a full-width educational banner with a temporary clearly marked editorial quotation.
+- Added an ivory two-column Our Story layout.
+- Added two replaceable institute-style academic images.
+- Added the Join Us CTA card and Enroll Now route.
+- Added a Playwright mobile About-page smoke test.
+
+### 3. How it was implemented
+
+The About route uses a Server Component that renders one presentational client-free content component. The quote banner uses a navy overlay over replaceable educational imagery. The story layout switches from two desktop columns to story-first and stacked imagery on mobile. Temporary copy is explicitly labeled where it could otherwise resemble a verified quotation or claim.
+
+### 4. Files changed
+
+- `src/app/(public)/about/page.tsx` — replaced placeholder with T08 content component.
+- `src/components/about/about-page-content.tsx` — quote banner, story, images, and Join Us CTA.
+- `tests/e2e/about.spec.ts` — About mobile route and CTA smoke test.
+- `TASK.md` — marked T08 complete.
+- `PROGRESS.md` — appended this entry.
+
+### 5. Database and API impact
+
+No database or API changes.
+
+### 6. Dependencies and configuration
+
+No dependency or environment-variable changes.
+
+### 7. Verification
+
+- `npm run check` — PASS.
+- `npm run test` — PASS: 2 unit tests.
+- `npm run format:check` — PASS.
+- `npm run build` — PASS; `/about` and existing routes generated.
+- `npm audit --omit=dev` — PASS: 0 production vulnerabilities.
+- Desktop browser snapshot — PASS: quote, story, images, and Join Us CTA rendered.
+- Mobile browser probe — PASS: no overflow; story and Join Us headings and `/enquiry` CTA verified.
+- `npx playwright test tests/e2e/about.spec.ts --reporter=line` — PASS: 1 test.
+
+### 8. Issues, risks, and limitations
+
+- The banner quotation is temporary and must be replaced by approved client quotation text.
+- The story copy is explicitly temporary and does not claim verified institute history.
+- Temporary Unsplash/remote images are not verified institute assets and need approval/replacement.
+- No dynamic institute content management exists; T08 is a static approved layout only.
+
+### 9. Owner actions required
+
+- Provide an approved inspirational quote and exact story copy.
+- Provide approved institute photographs and licensing.
+- Confirm or replace the temporary CTA copy.
+
+### 10. Current project state
+
+T00–T08 are complete. `/about` now contains a quote banner, editorial story, replaceable imagery, and Join Us Enroll Now CTA. Public shells and footer remain active.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T09 — Academics/course directory.
+- Why it is next: T09 implements `/academics` and `/academics/[board]/[class]` with hierarchy and subject details.
+- Prerequisites: T08 completion and separate T09 approval.
+- First files/areas: `src/app/(public)/academics/`, `DESIGN.md` academics structure, `prd.md` courses section, and future academic database boundaries.
+- Exact first steps: implement only the course directory shell and data-driven board/class hierarchy placeholders until the T29 admin academic module exists.
+- Acceptance criteria: `/academics` and class routes, board/class/subject hierarchy, subject details, empty states, and responsive course browsing.
+- Known pitfalls: do not invent permanent course names or fees; preserve dynamic integration for T29/T37.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes T00–T08 are complete on `main`. T08 replaced `/about` with quote banner, story, two images, and Join Us Enroll Now CTA. Temporary quote/story copy is marked, and remote images are replaceable. Static/build/unit/format/audit checks pass. Playwright About test passes. T09 is next and requires separate approval.
+
+### 13. Owner-run Git commands
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff
+git diff --stat
+git switch main
+git add src/app/(public)/about/page.tsx src/components/about tests/e2e/about.spec.ts TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T08): build About page"
+git push origin main
+```

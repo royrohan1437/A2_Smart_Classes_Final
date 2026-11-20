@@ -258,7 +258,12 @@ Privacy/Disclaimer, developer credit and discreet Admin Access. - Acceptance:
 split layout, complete footer links, honest unavailable submission state,
 and no fake success. STATUS: DONE.
 
-T08 --- About page: quote banner, story, institute images, CTA.
+T08 --- [x] About page - Implemented the full-width quote banner, editorial
+Our Story section, vertically arranged institute-style images, and Join Us
+Enroll Now CTA. Temporary quotation/story copy is clearly marked and no
+unverified institute facts or achievements are claimed. - Acceptance:
+quote banner, story, institute imagery, CTA, and mobile story-first layout
+verified. STATUS: DONE.
 
 T09 --- Academics/course directory: /academics and
 /academics/[board]/[class], board/class/subject hierarchy and subject
