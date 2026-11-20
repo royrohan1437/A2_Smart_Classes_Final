@@ -202,17 +202,18 @@ private URLs, or personal data in it.
 Tasks are sequential and dependencies matter. A task is complete only
 when acceptance criteria and verification pass.
 Phase 0 --- Foundation
-T00 --- Repository and specification inspection - Verify root,
-branch, remote, Node/npm versions, and working tree. - Check
-architecture/design/rules docs; resolve missing/conflicting docs with
-owner. - Create PROGRESS.md template and record baseline. -
-Acceptance: repository state and approved specs documented.
+T00 --- [x] Repository and specification inspection - Verified root,
+branch, remote, Node/npm versions, and working tree. Reviewed
+architecture/design/rules specifications, identified the
+`architechture.md` filename mismatch and credential-bearing source file,
+and recorded the baseline in `PROGRESS.md`. - Acceptance: repository
+state and approved specs documented. STATUS: DONE.
 
-T01 --- Next.js bootstrap - Create Next.js App Router + strict
-TypeScript project, src/ structure, scripts, .gitignore,
-.env.example, root vercel.json. - Connect only the owner's GitHub
-remote; owner creates repo. - Acceptance: app runs locally, remote
-verified, no secrets committed.
+T01 --- [x] Next.js bootstrap - Created a Next.js App Router + strict
+TypeScript project under `src/`, npm scripts, `.gitignore`, `.env.example`,
+and root `vercel.json`. The owner GitHub remote remains configured and no
+secrets are committed. - Acceptance: local app runs, remote remains verified,
+and no secrets committed. STATUS: DONE.
 
 T02 --- Dependencies and developer tooling - Add approved
 Prisma/Supabase, Zod, React Hook Form, Zustand, Sonner, Vitest,
