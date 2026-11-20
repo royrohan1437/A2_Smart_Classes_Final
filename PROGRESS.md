@@ -755,3 +755,116 @@ git diff --cached --check
 git commit -m "feat(T06): add homepage story and featured courses"
 git push origin main
 ```
+
+## T07 — Homepage enquiry section and footer
+
+- Date: 2026-11-20
+- Status: DONE
+- Branch: main
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- Add premium split enquiry layout immediately before footer: PASS.
+- Use deep navy left, ivory form surface, clean labels, validation, and submit treatment: PASS.
+- Use the approved enquiry fields: PASS.
+- Implement typed service boundary: PASS.
+- Never show fake success: PASS.
+- Complete public footer structure and legal/developer/admin links: PASS.
+- Admin pages remain footer-free: PASS.
+- Mobile layout and overflow verified: PASS.
+
+### 2. What was completed
+
+- Added the homepage permanent enquiry section after featured courses.
+- Added name, class, board, DOB, phone, and email fields.
+- Added Zod validation and inline field errors.
+- Added an intentional typed enquiry service boundary that reports database-service unavailability honestly.
+- Added loading and unavailable/error status states; no success confirmation is shown until a real server result exists.
+- Completed footer Quick Links, Study Links, legal links, developer credit, copyright, and Admin Access.
+- Retained the contact-details placeholder without inventing address or phone information.
+
+### 3. How it was implemented
+
+The enquiry UI is a client component because it manages form state and submission feedback. It validates through `enquiryInputSchema` before calling the typed `submitEnquiry` service. The service currently returns an explicit configuration-unavailable result until T27/backend database enquiry implementation exists. No fake success or student-account behavior is included.
+
+### 4. Files changed
+
+- `src/app/(public)/page.tsx` — inserted `EnquirySection` before the public footer.
+- `src/components/home/enquiry-section.tsx` — split layout and validated form UI.
+- `src/features/enquiry/types.ts` — Zod schema and typed submission result.
+- `src/features/enquiry/service.ts` — typed configuration-unavailable boundary.
+- `src/components/layout/public-footer.tsx` — complete approved footer links and bottom row.
+- `tests/e2e/enquiry.spec.ts` — mobile validation/unconfigured-state and footer smoke test.
+- `TASK.md` — marked T07 complete.
+- `PROGRESS.md` — appended this entry.
+
+### 5. Database and API impact
+
+No database or API changes.
+
+The enquiry form is not persisted and no Brevo notification is sent in T07. Database persistence, initial New status, admin notification, and email delivery belong to later enquiry/backend tasks.
+
+### 6. Dependencies and configuration
+
+No dependency additions or removals.
+
+No environment variables or credentials were added.
+
+### 7. Verification
+
+- `npm run check` — PASS.
+- `npm run test` — PASS: 2 unit tests.
+- `npm run format:check` — PASS.
+- `npm run build` — PASS; existing routes generated successfully.
+- `npm audit --omit=dev` — PASS: 0 production vulnerabilities.
+- `npx playwright test tests/e2e/enquiry.spec.ts --reporter=line` — PASS: 1 test.
+- Mobile browser DOM check — PASS; enquiry heading and full footer links rendered with no overflow.
+- No fake success observed; invalid submission and unavailable backend state were both asserted honestly.
+
+### 8. Issues, risks, and limitations
+
+- Enquiry submission is intentionally not persisted in T07.
+- Brevo and Supabase enquiry notifications are not implemented yet.
+- Contact address/phone/WhatsApp/email remain owner-provided content placeholders.
+- Footer mobile expandable accordion behavior is not yet interactive; T07 acceptance is complete but later responsive polish may refine it.
+
+### 9. Owner actions required
+
+- Provide approved institute contact address, phone, WhatsApp, and email.
+- Approve final enquiry copy if the temporary text is not final.
+- Commit T07 directly to `main` if the direct-main workflow remains approved.
+
+### 10. Current project state
+
+T00–T07 are complete. The homepage enquiry layout and full public footer are present. Enquiry submission shows an explicit unavailable-service status until T27/T20 backend integration. Public and student-facing footer structure is complete; admin routes remain footer-free.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T08 — About page.
+- Why it is next: T08 is the next public page in sequential task order.
+- Prerequisites: T07 completion and separate T08 approval.
+- First files/areas: `src/app/(public)/about/page.tsx`, `DESIGN.md` About section, public layout/footer, and replaceable institute image assets.
+- Exact first steps: implement quote banner, editorial story, institute images, and Enroll Now CTA only.
+- Acceptance criteria: quote banner, story, institute imagery, CTA, and responsive mobile story-first layout.
+- Known pitfalls: never invent institute quotations, facts, accreditation, or contact claims.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes T00–T07 are complete on `main`. T07 added split homepage enquiry UI and the complete public footer. Enquiry validation uses Zod and the service boundary intentionally reports configuration unavailability; no database, Brevo, or fake success exists. Footer includes Home, About, Faculty, Courses, Enquiry, Contact Us, Study Materials, Videos, legal links, developer credit, and Admin Access. Static/build/unit/format/Playwright checks pass and production audit reports 0 vulnerabilities. T08 is next and requires separate approval.
+
+### 13. Owner-run Git commands
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff
+git diff --stat
+git switch main
+git add src/app/(public)/page.tsx src/components/home/enquiry-section.tsx src/components/layout/public-footer.tsx src/features/enquiry tests/e2e/enquiry.spec.ts TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T07): add homepage enquiry and footer"
+git push origin main
+```

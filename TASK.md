@@ -250,8 +250,13 @@ course name and board name, plus a visible More Courses link to
 - Acceptance: editorial story, featured course/board cards, More Courses
 link, and section order verified. STATUS: DONE.
 
-T07 --- Homepage enquiry section and footer: split enquiry layout,
-typed service boundary, complete footer and links. No fake success.
+T07 --- [x] Homepage enquiry section and footer - Implemented the premium
+split navy/ivory enquiry layout with approved fields, Zod validation,
+typed submission boundary, loading/error states, and no fake success.
+Completed public footer Quick Links, Study Materials, Contact placeholder,
+Privacy/Disclaimer, developer credit and discreet Admin Access. - Acceptance:
+split layout, complete footer links, honest unavailable submission state,
+and no fake success. STATUS: DONE.
 
 T08 --- About page: quote banner, story, institute images, CTA.
 
