@@ -242,9 +242,13 @@ and horizontal overflow protection. - Acceptance: approved layout,
 responsive mobile composition, nine images, and CTA routes verified.
 STATUS: DONE.
 
-T06 --- Homepage story and featured courses: editorial story,
-featured course/board cards only, More Courses link; preserve approved
-section order.
+T06 --- [x] Homepage story and featured courses - Added an ivory editorial
+story/introduction with navy, charcoal and restrained gold typography,
+then an editorial image-led featured-course grid. Each card displays only
+course name and board name, plus a visible More Courses link to
+`/academics`. Preserved hero → story → courses section order.
+- Acceptance: editorial story, featured course/board cards, More Courses
+link, and section order verified. STATUS: DONE.
 
 T07 --- Homepage enquiry section and footer: split enquiry layout,
 typed service boundary, complete footer and links. No fake success.

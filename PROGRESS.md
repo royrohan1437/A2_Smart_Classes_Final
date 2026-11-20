@@ -641,3 +641,117 @@ git diff --cached --check
 git commit -m "feat(T05): build responsive homepage hero"
 git push origin main
 ```
+
+## T06 — Homepage story and featured courses
+
+- Date: 2026-11-20
+- Status: DONE
+- Branch: main
+- Commit: Not committed by Codex; owner-run commands supplied below.
+
+### 1. Objective and acceptance criteria
+
+- Add editorial storytelling immediately after the hero on ivory: PASS.
+- Use large serif heading, selective calligraphic emphasis, content, and institute imagery: PASS.
+- Add featured course image-led grid after the story: PASS.
+- Display only course name and board name on cards: PASS.
+- Add visible More Courses link to `/academics`: PASS.
+- Preserve hero → story → featured courses section order: PASS.
+- No T07 enquiry section or additional homepage sections added: PASS.
+
+### 2. What was completed
+
+- Added a reusable editorial story section with heading, calligraphic phrase, introductory copy, and two editorial images.
+- Added a featured-course grid with three temporary course entries: Science/CBSE, Mathematics/CBSE, and English/ICSE.
+- Added the More Courses link to `/academics`.
+- Verified the mobile and desktop homepage section sequence.
+- Added a Playwright homepage section-order and overflow test.
+- Added `127.0.0.1` to Next.js allowed development origins for Playwright.
+
+### 3. How it was implemented
+
+T06 uses small presentational Server Components because no client interaction or dynamic data is required. The public homepage returns the hero, editorial story, and featured-course components in exact approved order. The temporary course entries are visibly marked only by course name and board name and contain no fees, duration, or descriptions.
+
+### 4. Files changed
+
+- `src/app/(public)/page.tsx` — added story and featured-course components after hero.
+- `src/components/home/editorial-story.tsx` — ivory editorial story section.
+- `src/components/home/featured-courses.tsx` — editorial image-led course cards and More Courses link.
+- `next.config.ts` — allowed `127.0.0.1` as a development origin for Playwright.
+- `tests/e2e/homepage.spec.ts` — section-order, card-name, link, and overflow smoke test.
+- `TASK.md` — marked T06 complete.
+- `PROGRESS.md` — appended this entry.
+
+### 5. Database and API impact
+
+No database or API changes.
+
+No course repository/data connection was introduced; the temporary entries remain replaceable component data, not verified client data.
+
+### 6. Dependencies and configuration
+
+No dependency additions or removals.
+
+Development configuration:
+
+- `allowedDevOrigins`: `127.0.0.1`
+
+No secrets or environment values were added.
+
+### 7. Verification
+
+- `npm run check` — PASS.
+- `npm run test` — PASS: 2 unit tests.
+- `npm run format:check` — PASS.
+- `npm run build` — PASS; static `/` and all existing routes generated.
+- `npm audit --omit=dev` — PASS: 0 production vulnerabilities.
+- Desktop browser inspection — PASS; story and three course cards rendered after hero.
+- Mobile browser inspection — PASS; no horizontal overflow, story and course sections rendered, More Courses linked to `/academics`.
+- `npx playwright test tests/e2e/homepage.spec.ts --reporter=line` — PASS: 1 test passed after clean server retry and 30-second heading timeouts.
+
+### 8. Issues, risks, and limitations
+
+- Temporary institute-story copy and course entries are not verified client content.
+- Temporary Unsplash/remote images require approved source/licensing replacement before production.
+- Featured-course entries are static placeholder data until the academic database and T29/T37 integration exist.
+- T07 permanent enquiry section is intentionally not implemented yet.
+
+### 9. Owner actions required
+
+- Approve or replace temporary homepage story copy.
+- Replace placeholder course names/boards and temporary images with approved client data/assets.
+- Commit T06 directly to `main` if the direct-main workflow is accepted.
+
+### 10. Current project state
+
+T00–T06 are complete. The homepage now follows hero → ivory editorial story → featured courses. No T07 enquiry section or footer changes were added. Course cards expose only course name and board name and link to `/academics` through More Courses.
+
+### 11. Next task — exact continuation instructions
+
+- Next task ID and title: T07 — Homepage enquiry section and footer.
+- Why it is next: T07 is the next approved homepage section immediately before the footer.
+- Prerequisites: T06 completion and separate T07 approval.
+- First files/areas: `src/app/(public)/page.tsx`, `src/components/layout/public-footer.tsx`, public footer/header, `src/components/home/`, and enquiry form patterns in `DESIGN.md`/`TASK.md`.
+- Exact first steps: add the premium split enquiry layout, typed form boundary, real validation, server-confirmed success behavior, and then retain/complete the public footer.
+- Acceptance criteria: split layout, complete footer links, no fake success, loading/empty/error handling, and no feature outside T07 scope.
+- Known pitfalls: do not create a student account or fake Brevo success; enquiry persistence and email belong to later backend/enquiry tasks.
+
+### 12. Self-contained next-session context
+
+A2Smart Classes T00–T06 are complete and work is on `main` per the owner's direct-main instruction. T06 added an ivory editorial story and a three-card featured-course section after the hero. Cards show only course name and board name. More Courses routes to `/academics`. Static build, lint/type-check, unit tests, formatting, production audit, and Playwright homepage test pass. Playwright uses `127.0.0.1`, allowed in Next.js development configuration. T07 is next and must wait for separate approval.
+
+### 13. Owner-run Git commands
+
+```bash
+git status
+git branch --show-current
+git diff --check
+git diff
+git diff --stat
+git switch main
+git add src/app/(public)/page.tsx src/components/home/editorial-story.tsx src/components/home/featured-courses.tsx next.config.ts tests/e2e/homepage.spec.ts TASK.md PROGRESS.md
+git diff --cached
+git diff --cached --check
+git commit -m "feat(T06): add homepage story and featured courses"
+git push origin main
+```
