@@ -234,9 +234,13 @@ Sonner provider; scroll-to-top; branded loading; custom 404; and shell
 route placeholders. Admin pages have no public footer. - Acceptance:
 route shells and responsive navigation work. STATUS: DONE.
 Phase 1 --- Public website
-T05 --- Homepage hero: approved navy hero, editorial typography,
-CTAs, three image groups with at least nine images, parallax and reverse
-scroll direction; mobile layout as specified. Reduced-motion support.
+T05 --- [x] Homepage hero - Implemented solid navy editorial hero,
+calligraphic accent, short introduction, Explore Courses and Enroll Now
+CTAs, three desktop image columns with nine temporary replaceable images,
+alternating scroll parallax, three mobile image rows, reduced-motion support,
+and horizontal overflow protection. - Acceptance: approved layout,
+responsive mobile composition, nine images, and CTA routes verified.
+STATUS: DONE.
 
 T06 --- Homepage story and featured courses: editorial story,
 featured course/board cards only, More Courses link; preserve approved

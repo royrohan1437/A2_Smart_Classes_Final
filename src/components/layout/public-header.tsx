@@ -59,7 +59,7 @@ export function PublicHeader() {
             <span className="block font-serif text-lg leading-none sm:text-xl">
               A2Smart Classes
             </span>
-            <span className="mt-1 block truncate text-[10px] uppercase tracking-[0.18em] text-gold-300/80">
+            <span className="mt-1 hidden truncate text-[10px] uppercase tracking-[0.18em] text-gold-300/80 sm:block">
               Premium Academic Guidance
             </span>
           </span>

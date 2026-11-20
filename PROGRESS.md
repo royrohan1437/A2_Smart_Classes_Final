@@ -624,7 +624,7 @@ T00–T04 are complete. The public header/footer shell, student portal sidebar s
 
 ### 12. Self-contained next-session context
 
-A2Smart Classes T00–T04 are complete. The current branch is `feat/T04-application-shells`. Public routes use `(public)` layout shell, student routes use `(student)` layout shell, and `/admin/*` routes use the utility shell. The public header has desktop/mobile navigation and login dropdown, while the footer excludes invented contact details. The admin layout has no public footer. Custom 404/loading/scroll-to-top/Sonner provider are mounted globally. Production build generates `/`, `/about`, `/profile`, `/fees`, `/admin/dashboard`, login routes, and public placeholders. T05 begins only after separate approval.
+A2Smart Classes T00–T04 are complete. The owner requested direct pushes to `main` from now on. T05 implemented the approved navy homepage hero with nine temporary educational images, desktop alternating scroll parallax, mobile three-row composition, reduced-motion support, and no overflow. Static build and 2 unit tests pass. The mobile Playwright hero test passes after stale server-process cleanup. T06 is next and must wait for separate approval.
 
 ### 13. Owner-run Git commands
 
@@ -634,9 +634,10 @@ git branch --show-current
 git diff --check
 git diff
 git diff --stat
-git add src/app src/components/layout tests/e2e/shells.spec.ts TASK.md PROGRESS.md
+git switch main
+git add src/app/(public)/page.tsx src/app/globals.css src/components/layout/public-header.tsx src/components/home public/assets/hero tests/e2e/hero.spec.ts TASK.md PROGRESS.md
 git diff --cached
 git diff --cached --check
-git commit -m "feat(T04): build shared application shells"
-git push -u origin feat/T04-application-shells
+git commit -m "feat(T05): build responsive homepage hero"
+git push origin main
 ```
