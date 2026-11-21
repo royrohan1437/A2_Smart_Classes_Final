@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 export interface PortalNavItem {
   label: string;
@@ -24,7 +25,7 @@ export function PortalShell({
         <p className="mt-1 text-xs uppercase tracking-[0.18em] text-gold-300">{kind} portal</p>
         <nav className="mt-8 grid gap-1" aria-label={`${kind} navigation`}>
           {items.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="flex min-h-11 items-center justify-between rounded-md px-3 text-sm text-ivory/85 hover:bg-white/8 hover:text-gold-300"
@@ -33,21 +34,29 @@ export function PortalShell({
               {item.indicator ? (
                 <span className="size-2 rounded-full bg-gold-300" aria-label="New items" />
               ) : null}
-            </a>
+            </Link>
           ))}
         </nav>
       </aside>
       <div className="min-w-0">
         <header className="flex h-16 items-center justify-between border-b border-navy-950/10 bg-white px-4 md:px-8">
           <p className="font-serif text-xl text-navy-950">{title}</p>
-          <button
-            type="button"
-            className="min-h-11 rounded-md border border-navy-950/15 px-3 text-sm md:hidden"
-            aria-label="Open navigation drawer"
-          >
-            Menu
-          </button>
+          <span className="text-xs text-muted">Account services pending</span>
         </header>
+        <nav
+          aria-label={`${kind} navigation`}
+          className="flex gap-1 overflow-x-auto border-b border-navy-950/10 bg-white px-3 py-2 md:hidden"
+        >
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="shrink-0 px-3 py-2 text-sm text-navy-950 hover:text-gold-700"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
         <main className="p-4 sm:p-6 md:p-8">{children}</main>
       </div>
     </div>

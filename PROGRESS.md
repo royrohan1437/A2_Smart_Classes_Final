@@ -1124,6 +1124,78 @@ The T10–T16 implementation commits are already on `main` and tracked by `origi
 
 T17 — complete relational schema. Keep production migrations manual and approved; configure local database credentials only through ignored environment files or deployment secrets.
 
+## T17 — Relational schema and initial migration
+
+- Status: DONE locally; database migration intentionally not applied.
+- Implemented the Prisma models/enums for users, students and enrollments, hashed-token sessions and OTP state, board/class/subject/chapter hierarchy, academic sessions, teachers and their qualifications/subjects, retained enquiries, material categories/files, YouTube playlists, gallery images, fee schedules/monthly fees/payments.
+- Added required uniqueness, indexes, timestamps, restrictive foreign keys for historical/dependent records, student and teacher soft-delete markers, and hard-delete-friendly file/gallery/enquiry records. The initial SQL migration includes a PostgreSQL partial unique index allowing at most one active academic session.
+- Files: `prisma/schema.prisma`, `prisma/migrations/20261121010000_initial_schema/migration.sql`, `prisma/migrations/migration_lock.toml`, `TASK.md`, `PROGRESS.md`.
+- Verification: `npm run db:validate` PASS; `npm run db:generate` PASS (Prisma 7.10.1); offline `prisma migrate diff --from-empty --to-schema ... --script` generated SQL PASS on elevated retry after the restricted child process returned `spawn EPERM`. Migration SQL reviewed for models, indexes, restrictive FKs, and partial active-session index.
+- Database state: no connection configured; migration has NOT been applied and no data was touched.
+- Next: T18 — API foundation.
+
+## T18 — API foundation
+
+- Status: DONE.
+- Added standard `{ success, data }` and `{ success, error }` JSON response helpers, typed `ApiError`, generic client-safe error conversion, and Zod JSON request parsing with generic malformed/invalid request errors.
+- Added typed repository and service contracts plus JSON structured logging that recursively redacts password, OTP, token, secret, authorization, API-key, cookie, and signed-URL fields. Unexpected errors expose only a generic client message; logs retain the error type without its message.
+- Files: `src/lib/api-error.ts`, `src/lib/api-response.ts`, `src/lib/logger.ts`, `src/lib/repository.ts`, and focused tests.
+- Verification: API/logger unit tests PASS (2 files, 6 tests); `npm run type-check` PASS; focused ESLint PASS.
+- No routes or existing route contracts were changed; the helpers are ready for later API tasks.
+- Next: T19 — private Cloudflare R2 service.
+
+## T19 — Private Cloudflare R2 storage
+
+- Status: DONE; no R2 credentials are configured and no live object operations were made.
+- Added AWS SDK v3 S3 client/presigner integration targeting the account R2 endpoint, `auto` region, and `R2_PRIVATE_BUCKET_NAME` only. Upload keys are generated under `materials/`, `gallery/`, or `subject-photos/`; upload/download URL lifetimes are five minutes.
+- Added PDF/DOCX and JPEG/PNG/WEBP filename/MIME/size validation (25 MiB document and 10 MiB image limits), object HEAD size/type verification, and range-read file-signature verification. The limits are implementation safeguards because the PRD does not prescribe file-size caps.
+- Restricted downloads are signed only for admins or active, non-deleted students with matching board/class; free material is available to student viewers. Object keys must match generated UUID keys in known private prefixes. Replacements verify the new object, persist its reference, then delete the old object; persistence failure retains the old object.
+- Files: `src/features/storage/r2.ts`, `src/features/storage/validation.ts`, focused tests, `package.json`, `package-lock.json`, `TASK.md`, `PROGRESS.md`.
+- Verification: focused storage tests PASS (2 files, 8 tests); `npm run type-check` PASS; focused ESLint PASS after cleanup. AWS SDK install reported 3 high-severity advisories in the complete dependency tree; no forced audit fix was applied.
+- No route integration is added; future API handlers must load the stored material record and invoke the access check before signing its download.
+- Next: T20 — Brevo transactional email service.
+
+## T20 — Brevo transactional email service
+
+- Status: DONE; no Brevo credentials are configured and no real email was sent.
+- Added a server-side service for the Brevo `/v3/smtp/email` API with injected fetch for deterministic tests, the `api-key` header, typed results, and safe handling of missing configuration, invalid input, network failures, and upstream rejection.
+- Added admin enquiry notification and student/admin password-reset OTP templates with escaped HTML and plain text. The service does not send enquiry confirmation to students, and it never logs recipient addresses, message content, OTPs, API keys, or upstream response bodies.
+- Files: `src/features/email/brevo.ts`, `src/features/email/templates.ts`, focused tests, `TASK.md`, `PROGRESS.md`.
+- Verification: focused email tests PASS (2 files, 6 tests); `npm run type-check` PASS; focused ESLint PASS.
+- Next: T21 — security and infrastructure.
+
+## T21 — Security and infrastructure foundations
+
+- Status: DONE for shared security infrastructure. Login and password-reset route enforcement is intentionally consumed by T22/T24 when those routes are implemented; the existing project requirements do not specify numeric login/OTP attempt thresholds, so the shared limiter requires each caller to supply its approved policy rather than inventing thresholds.
+- Added session sliding/absolute-expiry and OTP expiry/use-state guards; secure HttpOnly, SameSite=Lax session cookie options with production `__Host-` names; same-origin/Fetch Metadata validation for unsafe requests; and an atomic PostgreSQL fixed-window rate-limit store. Rate-limit subjects are stored only as HMAC-SHA256 digests.
+- Added additive `RateLimitBucket` schema/migration and generated Prisma client. Migration is not applied to any database. Added a bearer-secret protected daily Vercel cleanup job for expired/revoked sessions, expired/consumed/invalidated OTPs, and expired rate-limit buckets. `CRON_SECRET` must be configured in Vercel before the job can run; cron schedules apply to production deployments.
+- Added baseline browser security headers and production HSTS, plus Sentry server/edge/client instrumentation and global error reporting. Sentry automatic collection of identity, cookies, headers, bodies, query values, database query data, and stack variables is disabled; event request/user/breadcrumb/extra/message content is stripped and exception values are redacted. Sentry remains inactive until `SENTRY_DSN` is configured.
+- Added focused security tests. No Cloudflare dashboard rate-limit rules could be configured from this repository; configure edge rules when the production domain/account is available. CSRF and rate-limit helpers must be applied by the later auth/recovery routes.
+- Files added/updated: `src/lib/security/*`, `src/app/api/cron/security-cleanup/route.ts`, `src/app/global-error.tsx`, `src/instrumentation.ts`, `src/instrumentation-client.ts`, `src/sentry.server.config.ts`, `src/sentry.edge.config.ts`, `src/lib/env.ts`, `next.config.ts`, `.env.example`, `vercel.json`, `prisma/schema.prisma`, `prisma/migrations/20261121020000_security_rate_limits/migration.sql`, `TASK.md`, `PROGRESS.md`; installed `@sentry/nextjs` and updated package manifests.
+- Verification: full Vitest suite PASS (16 files, 48 tests); TypeScript PASS; focused ESLint PASS; `npm run format:check` PASS; `npm run db:validate` PASS; `npm run db:generate` PASS. `npm run build` compiled successfully but Next's post-compile TypeScript worker failed with `spawn EPERM`; standalone TypeScript passed. No deployment, production migration, real cron invocation, or Sentry delivery was performed.
+- Next: T22 — auth core. Apply CSRF and login throttling to the implemented auth routes, then apply OTP attempt/resend policies in T24.
+
+## Frontend completion phase — editorial UI pass
+
+- Status: IN PROGRESS; frontend and backend are now tracked separately for T22–T40 in `TASK.md`. Backend items remain unchecked for later task-by-task delivery. This pass did not start or complete T22.
+- Design follows `design.md`, `rules.md`, `architechture.md`, and `prd.md`: existing navy/ivory/gold palette, editorial serif plus readable sans, restrained surfaces, meaningful empty states, and no invented academy contact/faculty/result claims.
+- Replaced the homepage's multi-column pill image collage and parallax behavior with one local, replaceable AI-generated classroom study image on the left and a navy gradient that deepens toward the right. Added one restrained primary-copy entrance animation; global reduced-motion rules disable it.
+- Added direct desktop/mobile header links for Study Materials, Class Videos, and Gallery. Replaced student and admin login placeholders with responsive sign-in form surfaces and clear non-production status messaging; no credentials are sent or accepted until backend auth is implemented.
+- Asset: `public/assets/hero/classroom-study.png`; its README identifies it as generated, illustrative content that must be replaced with owner-approved imagery. Existing shared palette/type/header/footer and public routes were preserved.
+- Expanded this pass: student recovery-details/change-password forms; profile and fees overview shells; responsive student/admin portal navigation; intentionally empty admin dashboard; admin route and empty-state shells for enquiries, students, teachers, academics, materials, videos, gallery, and fees. Their forms, record tables, OTP steps, payment interactions and connected states remain outstanding and are explicitly unchecked in `TASK.md`.
+- Still outstanding in the frontend split: full admin CRUD interactions, OTP verification/resend/success states, fee calendar/history/payment states, complete route-by-route desktop/tablet/mobile visual and accessibility QA, and connected data states after the backend tasks. Public catalogues remain empty until verified client data is supplied.
+- Verification: full unit suite PASS (16 files, 48 tests); `npm run type-check` PASS; focused ESLint PASS; `npm run format:check` PASS; `git diff --check` PASS with CRLF normalization warnings. Next.js production build and dev-server launch both stop at `spawn EPERM` (Windows errno -4048) during worker process creation, so rendered browser QA could not run. Browser plugin is not available. Frontend completion remains IN PROGRESS until remaining workflows and visual QA are completed.
+- Next: continue frontend-only items task by task from T22, leaving each backend checkbox unchecked until backend implementation begins.
+
+### T17–T20 integrated verification
+
+- Full unit suite PASS: 9 test files, 29 tests.
+- TypeScript PASS; focused ESLint on all changed application source/tests PASS; `npm run format:check` PASS; `npm run db:validate` PASS; `git diff --check` PASS.
+- Production build PASS on the final source. Next.js compiled, type-checked, generated 32 static/partial pages, and emitted `/api/health` as a dynamic route. This build was slow in this environment (approximately five minutes) but exited successfully.
+- Production dependency audit PASS: `npm audit --omit=dev` reports 0 vulnerabilities. Full-tree npm install audit reported 3 high-severity advisories; not force-fixed.
+- Repository-wide `npm run lint` remains blocked by three `@typescript-eslint/no-require-imports` errors in the existing generated `.gitnexus/run.cjs`, outside T17–T20 changes. No tooling files were altered to suppress them.
+- No Supabase migration, R2 object operation, or Brevo email was executed because credentials are not configured.
+
 ## T10 — Faculty page
 
 - Status: DONE with an honest empty state pending approved teacher records.

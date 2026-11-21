@@ -6,3 +6,406 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum OtpPurpose {
+  ADMIN_PASSWORD_RESET
+  STUDENT_PASSWORD_RESET
+}
+
+enum CourseMode {
+  ONLINE
+  OFFLINE
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  RESPONDED
+  NOT_INTERESTED
+  ADMITTED
+}
+
+enum MaterialSection {
+  NOTES
+  SAMPLE_PAPERS
+}
+
+enum MaterialFileType {
+  PDF
+  DOCX
+}
+
+enum MaterialAccess {
+  FREE
+  RESTRICTED
+}
+
+enum FeeMonth {
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+  JANUARY
+  FEBRUARY
+  MARCH
+}
+
+enum FeeStatus {
+  PAID
+  UNPAID
+}
+
+enum PaymentMethod {
+  UPI
+  CASH
+}
+
+model User {
+  id           String        @id @default(cuid())
+  role         UserRole
+  email        String?       @unique
+  phone        String?       @unique
+  passwordHash String
+  status       AccountStatus @default(ACTIVE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  student Student?
+  sessions AuthSession[]
+  passwordResetOtps PasswordResetOtp[]
+
+  @@index([role, status])
+}
+
+model Student {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  fullName          String
+  dateOfBirth       DateTime @db.Date
+  classId           String
+  academicSessionId String
+  guardianName      String
+  guardianPhone     String
+  admissionDate     DateTime @db.Date
+  deletedAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  class          Class          @relation(fields: [classId], references: [id], onDelete: Restrict)
+  academicSession AcademicSession @relation(fields: [academicSessionId], references: [id], onDelete: Restrict)
+  subjects       StudentSubject[]
+  feeSchedules   FeeSchedule[]
+
+  @@index([classId, academicSessionId, deletedAt])
+}
+
+model AuthSession {
+  id             String   @id @default(cuid())
+  userId         String
+  tokenHash      String   @unique
+  expiresAt      DateTime
+  lastActivityAt DateTime @default(now())
+  revokedAt      DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, expiresAt])
+  @@index([expiresAt, revokedAt])
+}
+
+model PasswordResetOtp {
+  id               String     @id @default(cuid())
+  userId           String
+  purpose           OtpPurpose
+  codeHash          String
+  expiresAt         DateTime
+  resendAvailableAt DateTime
+  failedAttempts    Int        @default(0)
+  consumedAt        DateTime?
+  invalidatedAt     DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, purpose, createdAt])
+  @@index([expiresAt, consumedAt, invalidatedAt])
+}
+
+model Board {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classes Class[]
+}
+
+model Class {
+  id        String   @id @default(cuid())
+  boardId   String
+  name      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board    Board            @relation(fields: [boardId], references: [id], onDelete: Restrict)
+  subjects Subject[]
+  students Student[]
+
+  @@unique([boardId, name])
+  @@index([boardId, sortOrder])
+}
+
+model Subject {
+  id             String     @id @default(cuid())
+  classId        String
+  name           String
+  photoObjectKey String?
+  description    String?
+  courseMode     CourseMode
+  courseDuration String
+  courseFees     Decimal    @db.Decimal(10, 2)
+  sortOrder      Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  class           Class              @relation(fields: [classId], references: [id], onDelete: Restrict)
+  chapters        Chapter[]
+  studentSubjects StudentSubject[]
+  teacherSubjects TeacherSubject[]
+  playlists       VideoPlaylist[]
+
+  @@unique([classId, name])
+  @@index([classId, sortOrder])
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  subjectId String
+  name      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subject           Subject           @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  materialCategories MaterialCategory[]
+
+  @@unique([subjectId, name])
+  @@index([subjectId, sortOrder])
+}
+
+model AcademicSession {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students     Student[]
+  feeSchedules FeeSchedule[]
+
+  @@index([isActive])
+}
+
+model Teacher {
+  id               String    @id @default(cuid())
+  name             String
+  photoObjectKey   String?
+  experienceYears  Int
+  deletedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  qualifications TeacherQualification[]
+  subjects       TeacherSubject[]
+
+  @@index([deletedAt])
+}
+
+model TeacherQualification {
+  id        String   @id @default(cuid())
+  teacherId String
+  name      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+
+  @@unique([teacherId, name])
+  @@index([teacherId, sortOrder])
+}
+
+model TeacherSubject {
+  teacherId String
+  subjectId String
+  createdAt DateTime @default(now())
+
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  @@id([teacherId, subjectId])
+  @@index([subjectId])
+}
+
+model StudentSubject {
+  studentId String
+  subjectId String
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  @@id([studentId, subjectId])
+  @@index([subjectId])
+}
+
+model Enquiry {
+  id            String        @id @default(cuid())
+  studentName  String
+  className    String
+  boardName    String
+  dateOfBirth  DateTime      @db.Date
+  phone        String
+  email        String
+  submittedAt  DateTime      @default(now())
+  status       EnquiryStatus @default(NEW)
+  internalNotes String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status, submittedAt])
+  @@index([phone])
+  @@index([email])
+}
+
+model MaterialCategory {
+  id        String          @id @default(cuid())
+  chapterId String
+  section   MaterialSection
+  name      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  chapter Chapter       @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+  files   MaterialFile[]
+
+  @@unique([chapterId, section, name])
+  @@index([chapterId, section])
+}
+
+model MaterialFile {
+  id               String           @id @default(cuid())
+  categoryId       String
+  displayTitle     String
+  originalFileName String
+  fileType         MaterialFileType
+  mimeType         String
+  sizeBytes        BigInt
+  storageKey       String           @unique
+  access           MaterialAccess
+  sortOrder        Int              @default(0)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  category MaterialCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId, sortOrder])
+  @@index([access])
+}
+
+model VideoPlaylist {
+  id        String   @id @default(cuid())
+  subjectId String
+  title     String
+  youtubeUrl String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  @@index([subjectId, sortOrder])
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  storageKey String  @unique
+  caption   String?
+  sortOrder Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FeeSchedule {
+  id                String   @id @default(cuid())
+  studentId         String
+  academicSessionId String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  student         Student         @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  academicSession AcademicSession @relation(fields: [academicSessionId], references: [id], onDelete: Restrict)
+  monthlyFees     MonthlyFee[]
+
+  @@unique([studentId, academicSessionId])
+  @@index([academicSessionId])
+}
+
+model MonthlyFee {
+  id            String    @id @default(cuid())
+  feeScheduleId String
+  month         FeeMonth
+  amount        Decimal   @db.Decimal(10, 2)
+  status        FeeStatus @default(UNPAID)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  feeSchedule FeeSchedule @relation(fields: [feeScheduleId], references: [id], onDelete: Restrict)
+  payment     Payment?
+
+  @@unique([feeScheduleId, month])
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  monthlyFeeId  String        @unique
+  amount        Decimal       @db.Decimal(10, 2)
+  paymentDate   DateTime      @db.Date
+  paymentMethod PaymentMethod
+  createdAt     DateTime      @default(now())
+
+  monthlyFee MonthlyFee @relation(fields: [monthlyFeeId], references: [id], onDelete: Restrict)
+}
+
+model RateLimitBucket {
+  keyHash        String   @id @db.Char(64)
+  count          Int
+  windowStartedAt DateTime
+  windowExpiresAt DateTime
+  updatedAt      DateTime @updatedAt
+
+  @@index([windowExpiresAt])
+}

@@ -9,11 +9,11 @@ the deadline is at risk, report incomplete task IDs, blockers,
 remaining effort and risks, then ask the owner for a decision.
 
 1. Mandatory project context
-Before coding, read these root documents: ARCHITECTURE.md,
-DESIGN.md, RULES.md, TASK.md, and the latest PROGRESS.md. Treat
-them as the approved specification. If a document is missing or
-documents conflict, stop and ask the owner; do not invent or silently
-resolve requirements.
+   Before coding, read these root documents: ARCHITECTURE.md,
+   DESIGN.md, RULES.md, TASK.md, and the latest PROGRESS.md. Treat
+   them as the approved specification. If a document is missing or
+   documents conflict, stop and ask the owner; do not invent or silently
+   resolve requirements.
 
 Stack and architecture: - Next.js App Router, TypeScript strict mode,
 modular monolith, feature-based structure. - Supabase PostgreSQL, Prisma
@@ -34,8 +34,7 @@ multi-record consistency. Supabase managed backups initially; R2 backup
 strategy separately. - vercel.json in project root; custom
 src/app/not-found.tsx. - Global Sonner toasts; success only after
 server confirmation; meaningful errors; no duplicate toasts; accessible
-controls; destructive actions require confirmation.
-2. Full scope --- do not drop any agreed feature
+controls; destructive actions require confirmation. 2. Full scope --- do not drop any agreed feature
 Public routes
 /, /about, /academics, /academics/[board]/[class], /faculty,
 /study-materials, /videos, /gallery, /contact, /enquiry,
@@ -146,8 +145,7 @@ portal premium academic; admin utility-focused. Also implement agreed
 custom 404, scroll-to-top, skeletons, branded loading states, global
 toasts, accessible interactions, and responsive breakpoints (mobile
 <768, tablet 768--1023, desktop >=1024). Do not invent sections or
-features.
-3. Required workflow after EVERY task
+features. 3. Required workflow after EVERY task
 For each task: 1. Read all project docs and latest progress log. 2.
 State task ID, objective, prerequisites, expected files/areas, and
 acceptance criteria before editing. 3. Inspect existing code and working
@@ -174,8 +172,8 @@ commands. Never claim an action succeeded unless verified.
 
 PROGRESS.md must be created in T00 and appended after every task;
 never erase prior entries. Never place secrets, tokens, passwords,
-private URLs, or personal data in it.
-4. Git rules
+private URLs, or personal data in it. 4. Git rules
+
 - Owner creates the GitHub repository and connects it before coding.
 - Use protected main and short-lived task branches,
   e.g. feat/T01-bootstrap.
@@ -198,16 +196,17 @@ private URLs, or personal data in it.
   rewriting without explicit approval. Explain whether the next task
   uses a new branch and how the owner integrates branches. Never merge
   automatically.
+
 5. Ordered execution plan
-Tasks are sequential and dependencies matter. A task is complete only
-when acceptance criteria and verification pass.
-Phase 0 --- Foundation
-T00 --- [x] Repository and specification inspection - Verified root,
-branch, remote, Node/npm versions, and working tree. Reviewed
-architecture/design/rules specifications, identified the
-`architechture.md` filename mismatch and credential-bearing source file,
-and recorded the baseline in `PROGRESS.md`. - Acceptance: repository
-state and approved specs documented. STATUS: DONE.
+   Tasks are sequential and dependencies matter. A task is complete only
+   when acceptance criteria and verification pass.
+   Phase 0 --- Foundation
+   T00 --- [x] Repository and specification inspection - Verified root,
+   branch, remote, Node/npm versions, and working tree. Reviewed
+   architecture/design/rules specifications, identified the
+   `architechture.md` filename mismatch and credential-bearing source file,
+   and recorded the baseline in `PROGRESS.md`. - Acceptance: repository
+   state and approved specs documented. STATUS: DONE.
 
 T01 --- [x] Next.js bootstrap - Created a Next.js App Router + strict
 TypeScript project under `src/`, npm scripts, `.gitignore`, `.env.example`,
@@ -219,8 +218,9 @@ T02 --- [x] Dependencies and developer tooling - Added approved
 Prisma/Supabase, Zod, React Hook Form, Zustand, Sonner, Vitest,
 Playwright, and Prettier tooling. Added environment validation, unit-test
 and E2E configuration, test scripts, and baseline formatting scripts.
+
 - Acceptance: baseline lint/type-check, unit tests, formatting, and
-production build pass. STATUS: DONE.
+  production build pass. STATUS: DONE.
 
 T03 --- [x] Design system - Implemented navy/gold/ivory/charcoal
 palette and typography tokens, responsive base styles, visible focus,
@@ -247,8 +247,9 @@ story/introduction with navy, charcoal and restrained gold typography,
 then an editorial image-led featured-course grid. Each card displays only
 course name and board name, plus a visible More Courses link to
 `/academics`. Preserved hero → story → courses section order.
+
 - Acceptance: editorial story, featured course/board cards, More Courses
-link, and section order verified. STATUS: DONE.
+  link, and section order verified. STATUS: DONE.
 
 T07 --- [x] Homepage enquiry section and footer - Implemented the premium
 split navy/ivory enquiry layout with approved fields, Zod validation,
@@ -311,25 +312,33 @@ are implemented and verified. Database connectivity remains unconfigured;
 applying migrations requires the T17 schema and approved database credentials.
 Production migrations were not run.
 
-T17 --- Complete relational schema: users, students, sessions,
+T17 --- [x] Complete relational schema: users, students, sessions,
 OTP/reset, boards/classes/subjects/chapters, academic sessions,
 teachers, enquiries, material categories/files, playlists, gallery, fee
 schedules/monthly fees/payments. Add enums, relations, indexes,
 constraints, timestamps, soft-delete/dependency rules. No unapproved
-schema fields.
+schema fields. Prisma 7.10.1 schema and generated client validated; reviewed
+initial PostgreSQL migration includes the single-active-session partial index.
+Migration is not applied; no database connection is configured.
 
-T18 --- API foundation: standardized response/error helpers, Zod
+T18 --- [x] API foundation: standardized response/error helpers, Zod
 validation, typed service/repository pattern, structured logging, thin
-route handlers.
+route handlers. Shared safe envelopes, typed errors, request parsing,
+repository/service contracts, and recursive log redaction are implemented
+and unit-verified.
 
-T19 --- Cloudflare R2: private bucket integration, presigned
+T19 --- [x] Cloudflare R2: private bucket integration, presigned
 upload/download, validation, safe replacement, permanent delete; test
-access control.
+access control. Server-side R2 service uses generated private-prefix keys,
+five-minute signed URLs, file/signature validation, authorization checks,
+and replacement ordering that retains the old file until reference persistence.
 
-T20 --- Brevo: server-side API integration, admin enquiry and OTP
-email templates, safe error handling and logging.
+T20 --- [x] Brevo: server-side API integration, admin enquiry and OTP
+email templates, safe error handling and logging. The server-side v3 client
+uses injected fetch, separate escaped HTML/plain-text templates, generic
+delivery results, and metadata-only failure logs; no student enquiry email is sent.
 
-T21 --- Security/infrastructure: secure cookies, CSRF protections
+T21 --- [x] Security/infrastructure: secure cookies, CSRF protections
 appropriate to request model, rate limits, login/OTP throttles, headers,
 Sentry, expiry enforcement and cleanup support. Verify no sensitive
 logs.
@@ -418,8 +427,7 @@ disabled. Record results.
 
 T43 --- Final handoff: actual architecture, env variable names,
 service setup, local run, deploy/rollback, backup notes, known
-limitations, final Git status and owner-run Git commands.
-6. Deadline guidance
+limitations, final Git status and owner-run Git commands. 6. Deadline guidance
 Suggested schedule: - 20 Nov: T00--T04, begin public pages. - 21
 Nov: finish public pages; backend foundation; begin
 auth/admin/student. - 22 Nov: complete all admin/student/fee
@@ -434,39 +442,41 @@ Merge and test each contribution. Generated code is not verified code.
 
 If the deadline is at risk, report exact unfinished task IDs, blockers,
 remaining effort, and risks; ask the owner. Never quietly drop a feature
-or misrepresent completion.
-7. Final release checklist
+or misrepresent completion. 7. Final release checklist
+
 - [ ] All public routes and agreed designs complete.
 - [ ] Enquiry persistence, admin email, in-app indicator work.
 - [ ] Super Admin bootstrap, login, reset, logout, route protection
-  work.
+      work.
 - [ ] Student creation, credentials, login, reset, profile, access
-  rules work.
+      rules work.
 - [ ] Teacher CRUD and public faculty integration work.
 - [ ] Boards/classes/subjects/chapters/sessions work.
 - [ ] Materials upload, R2, free/restricted access, PDF/DOCX delivery
-  work.
+      work.
 - [ ] Video playlist admin/public display work.
 - [ ] Gallery admin/public display work.
 - [ ] Admin/student fees, calculations, and payment rules work.
 - [ ] Unit, integration, and E2E tests completed and recorded.
 - [ ] Type-check, lint, production build pass.
 - [ ] Responsive, accessibility, security, performance checks
-  completed.
+      completed.
 - [ ] Preview deployment smoke tests pass.
 - [ ] Production migration explicitly approved and backed up.
 - [ ] Production deployment and smoke tests completed on 23 Nov.
 - [ ] PROGRESS.md contains a complete handoff for the next model.
+
 8. Non-negotiable per-task documentation and Git handoff
-This section is mandatory for every single task from T00 through T43.
-It is not optional, and it is not satisfied by a short summary in the
-chat.
+   This section is mandatory for every single task from T00 through T43.
+   It is not optional, and it is not satisfied by a short summary in the
+   chat.
 
 At the end of each task, Codex must leave the repository itself in a
 state that a completely new GPT/Codex session can pick up without access
 to the previous conversation.
 8.1 Update the project documents
 After completing each task, Codex must:
+
 1. Update the task's checkbox/status in TASK.md ([x] only when all
    acceptance criteria pass; otherwise mark it PARTIAL or BLOCKED
    in the task notes).
@@ -480,7 +490,8 @@ After completing each task, Codex must:
 5. Record any divergence from ARCHITECTURE.md, DESIGN.md, or
    RULES.md and obtain owner approval before treating an
    approved-spec change as final.
-8.2 Required PROGRESS.md entry --- use this template every time
+   8.2 Required PROGRESS.md entry --- use this template every time
+
 ## TXX — Task title
 
 - Date:
@@ -489,36 +500,47 @@ After completing each task, Codex must:
 - Commit: Not committed by Codex; owner-run commands supplied below.
 
 ### 1. Objective and acceptance criteria
+
 Restate the task objective and list each acceptance criterion with PASS / FAIL / NOT RUN.
 
 ### 2. What was completed
+
 Describe every change in concrete terms. Do not write vague statements such as "implemented backend".
 
 ### 3. How it was implemented
+
 Explain the approach, key components, important functions, request/data flow, validation, authorization, error handling, and relevant design decisions. Include enough technical detail for another model to understand and safely modify it.
 
 ### 4. Files changed
+
 For every created, modified, moved, or deleted file, give its repository-relative path and explain why it changed.
 
 ### 5. Database and API impact
+
 Record schema/model changes, migrations, indexes, constraints, seed changes, API routes, request/response shapes, service/repository changes, and compatibility considerations. Explicitly write "No database/API changes" when none occurred.
 
 ### 6. Dependencies and configuration
+
 List dependencies added/removed/updated and the reason for each. List environment-variable NAMES and configuration changes only. Never include secret values.
 
 ### 7. Verification
+
 List the exact commands run and their actual outcomes. Include tests, type-check, lint, build, manual browser checks, and relevant negative/security tests. Mark anything not run as NOT RUN; never imply it passed.
 
 ### 8. Issues, risks, and limitations
+
 Record bugs, incomplete acceptance criteria, technical debt, assumptions, edge cases, and anything that may affect the next task. If none, say "None known as of this handoff."
 
 ### 9. Owner actions required
+
 List any manual actions, credentials/configuration setup, dashboard settings, approvals, or decisions needed from the owner. Never ask the owner to paste secrets into chat or documentation.
 
 ### 10. Current project state
+
 Explain what works now, what is still stubbed/mocked, what is not yet connected, and any important commands needed to run the project locally.
 
 ### 11. Next task — exact continuation instructions
+
 - Next task ID and title:
 - Why it is next:
 - Prerequisites:
@@ -528,9 +550,11 @@ Explain what works now, what is still stubbed/mocked, what is not yet connected,
 - Known pitfalls and things not to redo:
 
 ### 12. Self-contained next-session context
+
 Write a concise but complete handoff prompt that can be copied into a brand-new GPT/Codex chat. It must identify the project, stack, relevant approved documents, completed task IDs, current branch/state, implementation details, important paths, commands, environment variable NAMES, test results, unresolved issues, and the exact next task. It must not rely on "as discussed earlier" or any inaccessible chat history.
 
 ### 13. Owner-run Git commands
+
 Provide exact commands based on the actual `git status`, current branch, and actual changed file paths. Include review, staging, staged-diff inspection, commit, and push. Do not use guessed paths or `git add .`.
 
 ```bash
@@ -633,3 +657,34 @@ Record missing client content/configuration as owner actions in
 PROGRESS.md, without recording secrets. Include a final checklist to
 populate real content, configure R2/Brevo, test uploads/email, and
 replace temporary assets/copy.
+
+## Frontend/backend delivery split (after T21)
+
+The existing T22–T43 task IDs and requirements remain authoritative. These
+subtasks show frontend completion separately from backend completion; a
+checked frontend item does not mark its task's backend work complete.
+
+- T22 Authentication core — Frontend [x] student/admin login surfaces, backend-dependent status is explicit; Backend [ ] auth/session/guards.
+- T23 Super Admin — Frontend [x] admin sign-in; [ ] reset/provisioning states. Backend [ ] bootstrap, login/reset/logout/protected routes.
+- T24 Student auth — Frontend [x] student sign-in; [ ] forgot/reset/change-password flows. Backend [ ] login, OTP, reset, password change.
+- T25 Student portal — Frontend [ ] profile and fees screens. Backend [ ] own-profile and fee authorization/data.
+- T26 Admin shell — Frontend [ ] responsive navigation and empty dashboard. Backend [ ] protection and enquiry indicator.
+- T27 Enquiries — Frontend [ ] management table, filters, detail and status/note interactions. Backend [ ] persistence, notification and updates.
+- T28 Teachers — Frontend [ ] management UI. Backend [ ] CRUD and public faculty integration.
+- T29 Academics — Frontend [ ] hierarchy and session management UI. Backend [ ] CRUD, ordering and dependencies.
+- T30 Students — Frontend [ ] student workflow/table/forms. Backend [ ] lifecycle, search, credentials and session revocation.
+- T31 Materials — Frontend [ ] management/upload/replacement UI. Backend [ ] APIs, R2 and authorization.
+- T32 Videos — Frontend [ ] playlist management UI. Backend [ ] CRUD and public integration.
+- T33 Gallery — Frontend [ ] management/upload UI. Backend [ ] CRUD, R2 and public integration.
+- T34 Fees model — Frontend [x] no dedicated screen required; Backend [ ] calculations and historical fee model.
+- T35 Admin fees — Frontend [ ] filters, table, calendar and payment UI. Backend [ ] queries/recording/payment rules.
+- T36 Student fees — Frontend [ ] year, overview, calendar and history UI. Backend [ ] own-record APIs/authorization.
+- T37 Integration — Frontend [ ] connected workflow states. Backend [ ] integrate module services and routes.
+- T38 Tests — Frontend [ ] visual/browser journey coverage. Backend [ ] service/API/security integration coverage.
+- T39 QA — Frontend [ ] full route/viewport/accessibility audit. Backend [ ] error and validation contract audit.
+- T40 Release audit — Frontend [ ] performance and data exposure audit. Backend [ ] security, authorization, uploads and secrets audit.
+
+### Frontend status update
+
+The T24 student sign-in, recovery-details and change-password screens are present; T25 profile and fees overview shells are present; T26 responsive portal navigation and the intentionally empty dashboard are present; T27–T33 and T35 have admin section routes with truthful empty states. CRUD workflows, OTP steps, record tables, payment flows, and connected data states remain incomplete and unchecked. Backend boxes remain unchecked.
+```

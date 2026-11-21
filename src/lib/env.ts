@@ -16,6 +16,7 @@ const serverEnvironmentSchema = z.object({
   ADMIN_BOOTSTRAP_TOKEN: z.string().min(16).optional(),
   NEXT_PUBLIC_APP_URL: z.string().url().optional().or(z.literal("")),
   SENTRY_DSN: z.string().url().optional().or(z.literal("")),
+  CRON_SECRET: z.string().min(32).optional(),
 });
 
 export type ServerEnvironment = z.infer<typeof serverEnvironmentSchema>;

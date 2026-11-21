@@ -9,6 +9,9 @@ const navigation = [
   { label: "About", href: "/about" },
   { label: "Teachers", href: "/faculty" },
   { label: "Courses", href: "/academics" },
+  { label: "Study Materials", href: "/study-materials" },
+  { label: "Class Videos", href: "/videos" },
+  { label: "Gallery", href: "/gallery" },
 ];
 
 export function PublicHeader() {
@@ -65,12 +68,12 @@ export function PublicHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-4 xl:gap-6 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="nav-link relative py-3 text-sm font-semibold text-ivory/90 transition-colors hover:text-gold-300"
+              className="nav-link relative py-3 text-xs font-semibold text-ivory/90 transition-colors hover:text-gold-300 xl:text-sm"
             >
               {item.label}
               {pathname === item.href ? (
@@ -114,7 +117,7 @@ export function PublicHeader() {
           </div>
           <Link
             href="/enquiry"
-            className="inline-flex min-h-11 items-center rounded-full border border-gold-300 bg-gold-300 px-5 text-sm font-bold text-navy-950 transition-transform hover:-translate-y-0.5"
+            className="inline-flex min-h-11 items-center border border-gold-300 bg-gold-300 px-4 text-sm font-semibold text-navy-950 transition-colors hover:bg-white hover:border-white"
           >
             Enroll Now
           </Link>
