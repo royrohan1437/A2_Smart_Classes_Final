@@ -2,6 +2,10 @@ import Link from "next/link";
 
 interface StudyMaterial {
   title: string;
+  board: string;
+  className: string;
+  subject: string;
+  chapter: string;
   category: "Notes" | "Sample Papers & PYQs";
   fileType: string;
   access: "FREE" | "RESTRICTED";
@@ -42,6 +46,14 @@ export default function StudyMaterialsPage() {
         {categories.map((category) => {
           const id = category === "Notes" ? "notes" : "sample-papers";
           const entries = materials.filter((material) => material.category === category);
+          const paths = [
+            ...new Map(
+              entries.map((item, index) => [
+                [item.board, item.className, item.subject, item.chapter].join(" / "),
+                index,
+              ]),
+            ).entries(),
+          ];
           return (
             <section key={category} id={id} className="scroll-mt-28 py-10">
               <h2 className="font-serif text-3xl text-navy-950">{category}</h2>
@@ -50,36 +62,57 @@ export default function StudyMaterialsPage() {
                   No {category.toLowerCase()} have been published yet.
                 </p>
               ) : (
-                <ul className="mt-5 divide-y divide-navy-950/10 border-y border-navy-950/10">
-                  {entries.map((item) => (
-                    <li
-                      key={item.href}
-                      className="flex flex-wrap items-center justify-between gap-4 py-5"
-                    >
-                      <div>
-                        <h3 className="font-semibold text-navy-950">{item.title}</h3>
-                        <p className="mt-1 text-sm text-charcoal-soft">
-                          {item.fileType} · {item.access}
-                        </p>
-                      </div>
-                      {item.access === "FREE" ? (
-                        <Link href={item.href} className="font-semibold text-gold-700 underline">
-                          View / Download
-                        </Link>
-                      ) : (
-                        <span className="text-sm font-semibold text-charcoal-soft">
-                          Student login required
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <nav
+                    aria-label={`${category} by board, class, subject, and chapter`}
+                    className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm"
+                  >
+                    {paths.map(([path, entryIndex]) => (
+                      <a
+                        key={path}
+                        href={`#${id}-item-${entryIndex}`}
+                        className="text-gold-700 underline underline-offset-4"
+                      >
+                        {path}
+                      </a>
+                    ))}
+                  </nav>
+                  <ul className="mt-5 divide-y divide-navy-950/10 border-y border-navy-950/10">
+                    {entries.map((item, index) => (
+                      <li
+                        key={item.href}
+                        id={`${id}-item-${index}`}
+                        className="flex flex-wrap items-center justify-between gap-4 py-5"
+                      >
+                        <div>
+                          <h3 className="font-semibold text-navy-950">{item.title}</h3>
+                          <p className="mt-1 text-sm text-charcoal-soft">
+                            {item.board} · {item.className} · {item.subject} · {item.chapter}
+                          </p>
+                          <p className="mt-1 text-sm text-charcoal-soft">
+                            {item.fileType} · {item.access}
+                          </p>
+                        </div>
+                        {item.access === "FREE" ? (
+                          <Link href={item.href} className="font-semibold text-gold-700 underline">
+                            View / Download
+                          </Link>
+                        ) : (
+                          <span className="text-sm font-semibold text-charcoal-soft">
+                            Student login required
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </>
               )}
             </section>
           );
         })}
         <p className="border-l-4 border-gold-300 bg-white px-5 py-4 text-sm text-charcoal-soft">
-          Board, class, subject, and chapter filters will appear with approved library records.
+          Published materials are grouped by board, class, subject, and chapter when approved files
+          are available.
         </p>
       </div>
     </main>

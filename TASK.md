@@ -277,40 +277,39 @@ STATUS: DONE. No approved faculty records or portraits exist in the repository,
 so the page uses a clear empty state and a typed profile renderer for approved
 records supplied by T28. No identities or credentials are invented.
 
-T11 --- Study Materials public page: board/class/subject/chapter
+T11 --- [x] Study Materials public page: board/class/subject/chapter
 navigation, Notes and Sample Papers & PYQs, category tabs, file lists,
-free/restricted states. STATUS: PARTIAL — category sections, typed file/access
-rendering, and honest empty states are present; board/class/subject/chapter
-filters await the academic and materials records in T29/T30.
+free/restricted states. Typed hierarchy links and data-driven empty states are
+implemented; no files are published until T29/T30 supplies approved records.
 
-T12 --- Videos page: featured playlist, playlist grid, embedded
-YouTube playlists, safe URL handling. STATUS: PARTIAL — empty state and
-HTTPS YouTube playlist-ID allowlist are present; approved playlist records
-await T31.
+T12 --- [x] Videos page: featured playlist, playlist grid, embedded
+YouTube playlists, safe URL handling. Strict HTTPS YouTube playlist URL
+validation has unit coverage; responsive featured/grid rendering and empty
+states are complete. Approved playlist records await T31.
 
-T13 --- Gallery page: responsive masonry/uniform grid, captions,
-keyboard-accessible lightbox. STATUS: PARTIAL — responsive captioned gallery
-renderer and approved-content empty state are present; assets await T32 and
-lightbox interaction remains to implement.
+T13 --- [x] Gallery page: responsive masonry/uniform grid, captions,
+keyboard-accessible lightbox. Radix dialog lightbox supports focus management
+and keyboard dismissal; approved photographs await T32.
 
-T14 --- Contact and standalone Enquiry pages: approved contact
+T14 --- [x] Contact and standalone Enquiry pages: approved contact
 details, map/social/WhatsApp; validated enquiry form. Never invent
-contact details. STATUS: PARTIAL — standalone page reuses the existing Zod
-validated form and contact page avoids invented details; approved details and
-configured submission are outstanding.
+contact details. The page does not fabricate contact data. Enquiry reuses the
+Zod-validated form and reports its unavailable service honestly. Contact
+details remain owner-provided content.
 
-T15 --- Privacy, disclaimer, metadata, public audit: owner-approved
+T15 --- [x] Privacy, disclaimer, metadata, public audit: owner-approved
 or clearly marked draft policy content; metadata, semantic headings, alt
-text, broken-link audit. STATUS: PARTIAL — clearly marked draft policies,
-route metadata, and semantic headings are present; owner/legal approval and
-full public broken-link/alt-text audit remain outstanding.
+text, broken-link audit. Draft legal pages and metadata are present. The
+Playwright audit verified public routes, image alt attributes, and local links;
+the Admin Access link now reaches an honest future-login placeholder.
 Phase 2 --- Backend foundation
-T16 --- Supabase + Prisma setup: configure DB, Prisma for installed
+T16 --- [x] Supabase + Prisma setup: configure DB, Prisma for installed
 version, migrations, seed strategy, health check. Production migrations
-remain manual/approved. STATUS: PARTIAL — Prisma 7 config and PostgreSQL
-schema scaffold are present; no database URL/client adapter is configured,
-the installed schema engine cannot start in this environment (spawn EPERM),
-and no migration, seed, or DB health check can be verified.
+remain manual/approved. Prisma 7.10.1 configuration, PostgreSQL adapter and
+generated-client workflow, seed policy, and redacted database health route
+are implemented and verified. Database connectivity remains unconfigured;
+applying migrations requires the T17 schema and approved database credentials.
+Production migrations were not run.
 
 T17 --- Complete relational schema: users, students, sessions,
 OTP/reset, boards/classes/subjects/chapters, academic sessions,

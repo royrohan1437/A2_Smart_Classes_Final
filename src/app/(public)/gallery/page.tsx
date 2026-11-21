@@ -1,8 +1,4 @@
-interface GalleryImage {
-  src: string;
-  alt: string;
-  caption: string;
-}
+import { GalleryGrid, type GalleryImage } from "@/components/gallery/gallery-grid";
 
 // Approved institute images and captions will be supplied by the T32 gallery module.
 const galleryImages: GalleryImage[] = [];
@@ -22,19 +18,7 @@ export default function GalleryPage() {
             Gallery photographs will appear here once approved for publication.
           </p>
         ) : (
-          <ul className="mt-12 columns-1 gap-6 space-y-6 p-0 sm:columns-2 lg:columns-3">
-            {galleryImages.map((image) => (
-              <li key={image.src} className="break-inside-avoid list-none">
-                <figure className="m-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- approved gallery assets will be served by T32. */}
-                  <img src={image.src} alt={image.alt} loading="lazy" className="w-full" />
-                  <figcaption className="mt-2 text-sm text-charcoal-soft">
-                    {image.caption}
-                  </figcaption>
-                </figure>
-              </li>
-            ))}
-          </ul>
+          <GalleryGrid images={galleryImages} />
         )}
       </div>
     </main>
