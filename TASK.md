@@ -271,30 +271,46 @@ clearly labeled, removable demo catalogue data and empty states. - Acceptance:
 directory/class routes, board/class/subject hierarchy, subject details,
 empty states, and responsive browsing verified. STATUS: DONE.
 
-T10 --- Faculty page: image-led circular portraits, name,
+T10 --- [x] Faculty page: image-led circular portraits, name,
 qualifications, subjects, experience; data-driven states.
+STATUS: DONE. No approved faculty records or portraits exist in the repository,
+so the page uses a clear empty state and a typed profile renderer for approved
+records supplied by T28. No identities or credentials are invented.
 
 T11 --- Study Materials public page: board/class/subject/chapter
 navigation, Notes and Sample Papers & PYQs, category tabs, file lists,
-free/restricted states.
+free/restricted states. STATUS: PARTIAL — category sections, typed file/access
+rendering, and honest empty states are present; board/class/subject/chapter
+filters await the academic and materials records in T29/T30.
 
 T12 --- Videos page: featured playlist, playlist grid, embedded
-YouTube playlists, safe URL handling.
+YouTube playlists, safe URL handling. STATUS: PARTIAL — empty state and
+HTTPS YouTube playlist-ID allowlist are present; approved playlist records
+await T31.
 
 T13 --- Gallery page: responsive masonry/uniform grid, captions,
-keyboard-accessible lightbox.
+keyboard-accessible lightbox. STATUS: PARTIAL — responsive captioned gallery
+renderer and approved-content empty state are present; assets await T32 and
+lightbox interaction remains to implement.
 
 T14 --- Contact and standalone Enquiry pages: approved contact
 details, map/social/WhatsApp; validated enquiry form. Never invent
-contact details.
+contact details. STATUS: PARTIAL — standalone page reuses the existing Zod
+validated form and contact page avoids invented details; approved details and
+configured submission are outstanding.
 
 T15 --- Privacy, disclaimer, metadata, public audit: owner-approved
 or clearly marked draft policy content; metadata, semantic headings, alt
-text, broken-link audit.
+text, broken-link audit. STATUS: PARTIAL — clearly marked draft policies,
+route metadata, and semantic headings are present; owner/legal approval and
+full public broken-link/alt-text audit remain outstanding.
 Phase 2 --- Backend foundation
 T16 --- Supabase + Prisma setup: configure DB, Prisma for installed
 version, migrations, seed strategy, health check. Production migrations
-remain manual/approved.
+remain manual/approved. STATUS: PARTIAL — Prisma 7 config and PostgreSQL
+schema scaffold are present; no database URL/client adapter is configured,
+the installed schema engine cannot start in this environment (spawn EPERM),
+and no migration, seed, or DB health check can be verified.
 
 T17 --- Complete relational schema: users, students, sessions,
 OTP/reset, boards/classes/subjects/chapters, academic sessions,

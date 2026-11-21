@@ -137,6 +137,79 @@ If the owner commits directly on `main`, replace the branch command and push com
 git push origin main
 ```
 
+## T10 — Faculty page
+
+- Status: DONE with an honest empty state pending approved teacher records.
+- Requirements: show approved faculty portraits, names, qualifications, subjects, and experience with data-driven populated/empty states.
+- Implementation: replaced the Faculty placeholder with an editorial page and a typed `FacultyProfile` rendering path. Because the repository contains no approved faculty identities, qualifications, experience, or portraits, the current data collection is empty and the page clearly says profiles will appear after approval. The card renderer supports circular portraits and the requested information for future approved records; T28 will supply/manage those records.
+- Files changed: `src/app/(public)/faculty/page.tsx`, `tests/e2e/faculty.spec.ts`, `TASK.md`, `PROGRESS.md`.
+- Database/API/dependencies: none.
+- Verification: new Playwright test was authored first. The restricted runner failed to start workers with Windows `spawn EPERM`; the elevated retry started a browser test but hung before returning and was interrupted. No passing browser verification is claimed. Direct `node_modules/.bin/tsc --noEmit` passed, focused ESLint passed, and `git diff --check` passed. Prettier initially flagged formatting in the new test (now corrected) and pre-existing style in `TASK.md`; full build and browser verification remain unrun.
+- GitNexus: pre-edit impact on the placeholder file returned UNKNOWN, zero resolved callers, and index one commit behind. This is a route file (framework referenced); no shared symbols were modified.
+- Risks/limitations: the data collection is empty until T28; the page intentionally does not invent staff credentials or imagery. The current populated renderer uses a remote image URL and needs the future approved image-hosting convention.
+- Next task: T11 — Study Materials public page.
+- Owner commit command: `git add -- "src/app/(public)/faculty/page.tsx" tests/e2e/faculty.spec.ts TASK.md PROGRESS.md; git commit -m "feat(T10): build faculty page"`
+
+## T11 — Study Materials public page
+
+- Status: PARTIAL: public library shell implemented; hierarchy filters depend on T29/T30 data.
+- Files changed: `src/app/(public)/study-materials/page.tsx`, `TASK.md`, `PROGRESS.md`.
+- Added Notes and Sample Papers & PYQs navigation, typed file metadata/access states, free View/Download vs restricted-login rendering, and empty states. No document records are fabricated.
+- Verification: type-check/lint/format/build/E2E pending at this checkpoint.
+- Dependencies/risks: board/class/subject/chapter selectors require approved academic and material records. No API or storage URL exists yet.
+- Next: T12 — Video Lectures page.
+- Owner commit: `git add -- "src/app/(public)/study-materials/page.tsx" TASK.md PROGRESS.md; git commit -m "feat(T11): build study materials page"`
+
+## T12 — Videos page
+
+- Status: PARTIAL: safe playlist display path and empty state implemented; no approved playlist exists.
+- Files changed: `src/app/(public)/videos/page.tsx`, `TASK.md`, `PROGRESS.md`.
+- Added typed playlist records, featured first-playlist treatment, responsive playlist layout, privacy-enhanced YouTube embeds, and strict HTTPS `youtube.com` playlist-ID validation. Invalid links render a status message; arbitrary hostnames are not embedded.
+- Verification: pending.
+- Dependency: approved playlists await T31.
+- Next: T13 — Gallery page.
+- Owner commit: `git add -- "src/app/(public)/videos/page.tsx" TASK.md PROGRESS.md; git commit -m "feat(T12): build video lectures page"`
+
+## T13 — Gallery page
+
+- Status: PARTIAL: responsive captioned gallery and safe empty state implemented; keyboard lightbox not implemented.
+- Files changed: `src/app/(public)/gallery/page.tsx`, `TASK.md`, `PROGRESS.md`.
+- Added data-driven responsive masonry layout, descriptive alt/caption fields, and an empty state pending approved institute photographs. No images or captions are invented.
+- Verification: pending.
+- Dependency: approved gallery records await T32; lightbox remains an acceptance gap.
+- Next: T14 — Contact and Enquiry pages.
+- Owner commit: `git add -- "src/app/(public)/gallery/page.tsx" TASK.md PROGRESS.md; git commit -m "feat(T13): build gallery page"`
+
+## T14 — Contact and Enquiry pages
+
+- Status: PARTIAL: pages and existing validated form integrated; verified contact values and backend submission are unavailable.
+- Files changed: `src/app/(public)/contact/page.tsx`, `src/app/(public)/enquiry/page.tsx`, `TASK.md`, `PROGRESS.md`.
+- Contact page states details are pending verification and links to Enquiry. Enquiry route reuses existing Zod-validated form and has route metadata; service continues to report unavailable rather than fake success. No address, phone, email, map, WhatsApp, or social account was invented.
+- Verification: pending.
+- Dependencies: owner must provide contact details; backend submission follows T27.
+- Next: T15 — Privacy, disclaimer, metadata, and public audit.
+- Owner commit: `git add -- "src/app/(public)/contact/page.tsx" "src/app/(public)/enquiry/page.tsx" TASK.md PROGRESS.md; git commit -m "feat(T14): add contact and enquiry pages"`
+
+## T15 — Privacy, disclaimer, metadata, and public audit
+
+- Status: PARTIAL: draft legal routes and metadata implemented; owner/legal review and sitewide audit remain.
+- Files changed: `src/app/(public)/privacy-policy/page.tsx`, `src/app/(public)/disclaimer/page.tsx`, `TASK.md`, `PROGRESS.md`.
+- Both pages explicitly identify drafts. Privacy copy accurately states the current enquiry form is not persisted and flags unknown retention/use/contact practices for review. Disclaimer notes illustrative catalogue entries and external provider limitations. Both routes have descriptive metadata and semantic section headings.
+- Verification: pending. Sitewide broken-link and alt-text audit not completed.
+- Owner action: review and approve legal policy text and supply privacy contact/process.
+- Next: T16 — Supabase + Prisma setup.
+- Owner commit: `git add -- "src/app/(public)/privacy-policy/page.tsx" "src/app/(public)/disclaimer/page.tsx" TASK.md PROGRESS.md; git commit -m "feat(T15): add draft legal pages"`
+
+## T16 — Supabase + Prisma setup
+
+- Status: PARTIAL. Initial Prisma 7.10.1 configuration and PostgreSQL schema scaffold added; no database is connected.
+- Files changed: `prisma.config.ts`, `prisma/schema.prisma`, `TASK.md`, `PROGRESS.md`.
+- Configuration points Prisma CLI to `prisma/schema.prisma` and `prisma/migrations`, reading `DATABASE_URL` without recording its value. Production migrations were not run.
+- Verification/blockers: Prisma CLI reports 7.10.1, `@prisma/client` is not installed, and `prisma --version` failed when its schema-engine child process returned `spawn EPERM` / `E_CANNOT_RESOLVE_VERSION`. No `.env` credentials were read or displayed. No migration, seed script, Supabase connection, or database health check was claimed.
+- Required to finish: restore permission to execute the installed Prisma engine, add/configure a compatible Prisma runtime adapter/client, supply local approved DB credentials, then validate schema, generate client, create non-production migration, seed strategy, and connection health check. Do not run production migration without explicit authorization.
+- Next: T17 — Complete relational schema.
+- Owner commit: `git add -- prisma.config.ts prisma/schema.prisma TASK.md PROGRESS.md; git commit -m "chore(T16): configure Prisma database setup"`
+
 ## T09 — Academics/course directory
 
 - Date: 2026-11-21
